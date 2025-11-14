@@ -222,6 +222,18 @@ export default function GroupPickerPage() {
             </Button>
           </div>
 
+          <div style={{ marginBottom: 16, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <Button onClick={loadFromShared} variant="secondary" size="small">
+              Load Shared List
+            </Button>
+            <Button onClick={saveToShared} variant="secondary" size="small">
+              Save to Shared
+            </Button>
+            <Button onClick={clearShared} variant="danger" size="small">
+              Clear Shared
+            </Button>
+          </div>
+
           {students.length > 0 && (
             <>
               <div
@@ -273,15 +285,6 @@ export default function GroupPickerPage() {
               </div>
 
               <div style={{ marginBottom: 16, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <Button onClick={loadFromShared} variant="secondary" size="small">
-                  Load Shared List
-                </Button>
-                <Button onClick={saveToShared} variant="secondary" size="small">
-                  Save to Shared
-                </Button>
-                <Button onClick={clearShared} variant="danger" size="small">
-                  Clear Shared
-                </Button>
                 <div style={{ marginLeft: 'auto' }}>
                   <Button onClick={clearAll} variant="danger" size="small">
                     Clear All Students

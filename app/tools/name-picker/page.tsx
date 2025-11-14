@@ -6,7 +6,7 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
-import { getStorageItem, setStorageItem } from '@/lib/storage';
+import { getStorageItem, setStorageItem, getSharedStudents, setSharedStudents, clearSharedStudents } from '@/lib/storage';
 
 interface Student {
   id: string;
@@ -109,6 +109,51 @@ export default function NamePickerPage() {
     }
   };
 
+  const loadFromShared = () => {
+    const shared = getSharedStudents();
+    if (shared.length === 0) {
+      alert('No shared student list found. Save students first from any tool.');
+      return;
+    }
+
+    if (students.length > 0) {
+      if (!confirm('This will replace your current list. Continue?')) {
+        return;
+      }
+    }
+
+    const loadedStudents: Student[] = shared.map(s => ({
+      id: s.id,
+      name: s.name,
+      picked: false,
+    }));
+
+    setStudents(loadedStudents);
+    setCurrentPick(null);
+  };
+
+  const saveToShared = () => {
+    if (students.length === 0) {
+      alert('Add some students first before saving.');
+      return;
+    }
+
+    const toSave = students.map(s => ({
+      id: s.id,
+      name: s.name,
+    }));
+
+    setSharedStudents(toSave);
+    alert(`Saved ${students.length} students to shared list!`);
+  };
+
+  const clearShared = () => {
+    if (confirm('This will clear the shared student list used by all tools. Continue?')) {
+      clearSharedStudents();
+      alert('Shared student list cleared!');
+    }
+  };
+
   const unpickedCount = students.filter(s => !s.picked).length;
   const pickedCount = students.filter(s => s.picked).length;
 
@@ -203,16 +248,29 @@ export default function NamePickerPage() {
             </Button>
           </div>
 
-          {students.length > 0 && (
-            <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-              <Button onClick={resetPicked} variant="secondary" size="small">
-                Reset Picked
+          <div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+            {students.length > 0 && (
+              <>
+                <Button onClick={resetPicked} variant="secondary" size="small">
+                  Reset Picked
+                </Button>
+                <Button onClick={clearAll} variant="danger" size="small">
+                  Clear All
+                </Button>
+              </>
+            )}
+            <div style={{ marginLeft: 'auto', display: 'flex', gap: 12 }}>
+              <Button onClick={loadFromShared} variant="secondary" size="small">
+                Load Shared List
               </Button>
-              <Button onClick={clearAll} variant="danger" size="small">
-                Clear All
+              <Button onClick={saveToShared} variant="secondary" size="small">
+                Save to Shared
+              </Button>
+              <Button onClick={clearShared} variant="danger" size="small">
+                Clear Shared
               </Button>
             </div>
-          )}
+          </div>
 
           {/* Student List */}
           {students.length > 0 ? (

@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import BrandLogo from '@/components/BrandLogo';
 import ToolCard from '@/components/tools/ToolCard';
 
 export const metadata: Metadata = {
@@ -89,43 +88,29 @@ const tools = [
     category: 'Classroom Management',
     icon: '📊',
   },
-  {
-    id: 'queue-manager',
-    title: 'Queue Manager',
-    description: 'Digital hand-raising and call queue system.',
-    category: 'Classroom Management',
-    icon: '✋',
-  },
 ];
 
 const categories = Array.from(new Set(tools.map(tool => tool.category)));
 
 export default function ToolsPage() {
   return (
-    <div className="page-wrapper">
-      <header className="header">
+    <div className="tool-page">
+      <header className="tool-header-simple">
         <div className="container">
-          <BrandLogo />
-          <nav className="nav">
-            <Link href="/#apps">Apps</Link>
-            <Link href="/tools" className="active">Tools</Link>
-            <Link href="/#about">About</Link>
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
-          </nav>
-        </div>
-      </header>
-
-      <main className="main">
-        <section className="hero-section">
-          <div className="container">
-            <h1 className="hero-title">Free Teacher Tools</h1>
-            <p className="hero-subtitle">
+          <Link href="/" className="back-link">
+            ← Back to Home
+          </Link>
+          <div className="tool-header-content">
+            <h1 className="tool-title">Free Teacher Tools</h1>
+            <p className="tool-description">
               A collection of free, easy-to-use classroom tools to help manage
               your teaching day. No sign-up required, works offline.
             </p>
           </div>
-        </section>
+        </div>
+      </header>
+
+      <main className="tool-main">
 
         {categories.map(category => (
           <section key={category} className="tools-section">
@@ -148,15 +133,6 @@ export default function ToolsPage() {
           </section>
         ))}
       </main>
-
-      <footer className="footer">
-        <div className="container">
-          <p>
-            &copy; {new Date().getFullYear()} Jayden Tebble trading as TebTally
-            · ABN 96 110 054 130
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

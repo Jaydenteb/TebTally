@@ -27,6 +27,7 @@ export default function WheelSpinnerPage() {
   const [result, setResult] = useState<string | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Load segments
   useEffect(() => {
@@ -137,6 +138,15 @@ export default function WheelSpinnerPage() {
     setSegments(segments.map(s => s.id === id ? { ...s, color } : s));
   };
 
+  const playSound = () => {
+    if (soundEnabled && audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch((err) => {
+        console.error('Failed to play sound:', err);
+      });
+    }
+  };
+
   const spin = () => {
     if (isSpinning || segments.length === 0) return;
 
@@ -155,12 +165,15 @@ export default function WheelSpinnerPage() {
       const normalizedRotation = newRotation % 360;
       const segmentAngle = 360 / segments.length;
       // Pointer is at top (270 degrees in canvas coordinates)
-      const pointerAngle = (360 - normalizedRotation + 90) % 360;
-      const winningIndex = Math.floor(pointerAngle / segmentAngle);
+      // Calculate which segment is under the pointer
+      const pointerPosition = 270;
+      const originalAngle = (pointerPosition - normalizedRotation + 360) % 360;
+      const winningIndex = Math.floor(originalAngle / segmentAngle) % segments.length;
       const winner = segments[winningIndex];
 
       setResult(winner.label);
       setIsSpinning(false);
+      playSound();
     }, 4000);
   };
 
@@ -169,6 +182,12 @@ export default function WheelSpinnerPage() {
       title="Wheel Spinner"
       description="Customizable spinning wheel for random selection."
     >
+      {/* Audio element */}
+      <audio
+        ref={audioRef}
+        src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVKzn7q1gGgs+mtzyxnMlBCuAz/LXiTgIGWi68OScTgwNU6ni77BnHgY2jtv0y3osBSp3yPDdkUELFF608OmpVxQLRp/g8r9sIwYxh9H003w0Bh1tw/Dgl0cOD1Sq5++vYhsLPpzc8sZ0Jgcqf87y1os4CRllufDlnFANDlKo4u+zahwHNY3b88t8LQUrd8jw3JJCCxRct/Dqq1gWC0WeDvPAbSQGMIbR89R9Ng"
+      />
+
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         {/* Wheel Display */}
         <Card padding="large">

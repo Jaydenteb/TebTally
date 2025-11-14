@@ -123,39 +123,61 @@ export default function DiceRollerPage() {
         {/* Standard Dice */}
         <Card padding="large">
           <h3 style={{ margin: '0 0 20px', fontSize: '1.25rem', fontWeight: 600 }}>
-            Standard Dice
+            Roll Single Die
           </h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16 }}>
             {DICE_TYPES.map((die) => (
               <button
                 key={die.sides}
                 onClick={() => rollDice(die.sides, 1)}
                 disabled={isRolling}
+                className="dice-button"
                 style={{
-                  padding: '20px 12px',
-                  background: 'var(--surface-base)',
+                  padding: '24px 16px',
+                  background: 'linear-gradient(135deg, var(--surface-base), var(--surface-subtle))',
                   border: '2px solid var(--border-muted)',
-                  borderRadius: 'var(--radius-md)',
-                  fontSize: '1.25rem',
-                  fontWeight: 600,
-                  color: 'var(--text-main)',
+                  borderRadius: 'var(--radius-lg)',
                   cursor: isRolling ? 'not-allowed' : 'pointer',
                   transition: 'all var(--transition-fast)',
                   fontFamily: 'inherit',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 8,
                 }}
                 onMouseEnter={(e) => {
                   if (!isRolling) {
                     e.currentTarget.style.borderColor = 'var(--primary-mid)';
-                    e.currentTarget.style.background = 'var(--surface-subtle)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
                   }
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.borderColor = 'var(--border-muted)';
-                  e.currentTarget.style.background = 'var(--surface-base)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                {die.label}
+                <div style={{
+                  fontSize: '2.5rem',
+                  lineHeight: 1,
+                }}>
+                  🎲
+                </div>
+                <div style={{
+                  fontSize: '1.25rem',
+                  fontWeight: 700,
+                  color: 'var(--primary-mid)',
+                }}>
+                  {die.label}
+                </div>
+                <div style={{
+                  fontSize: '0.875rem',
+                  color: 'var(--text-muted)',
+                }}>
+                  1-{die.sides}
+                </div>
               </button>
             ))}
           </div>
@@ -164,28 +186,50 @@ export default function DiceRollerPage() {
         {/* Multiple Dice */}
         <Card padding="large" style={{ marginTop: 24 }}>
           <h3 style={{ margin: '0 0 20px', fontSize: '1.25rem', fontWeight: 600 }}>
-            Roll Multiple Dice
+            Common Combinations
           </h3>
 
-          <div style={{ display: 'grid', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
             {[
-              { count: 2, sides: 6, label: '2d6' },
-              { count: 3, sides: 6, label: '3d6' },
-              { count: 4, sides: 6, label: '4d6' },
-              { count: 2, sides: 20, label: '2d20' },
-              { count: 5, sides: 6, label: '5d6' },
-              { count: 6, sides: 6, label: '6d6' },
+              { count: 2, sides: 6, label: '2d6', desc: 'Two 6-sided' },
+              { count: 3, sides: 6, label: '3d6', desc: 'Three 6-sided' },
+              { count: 4, sides: 6, label: '4d6', desc: 'Four 6-sided' },
+              { count: 2, sides: 20, label: '2d20', desc: 'Two 20-sided' },
+              { count: 5, sides: 6, label: '5d6', desc: 'Five 6-sided' },
+              { count: 6, sides: 6, label: '6d6', desc: 'Six 6-sided' },
             ].map((option) => (
-              <Button
+              <button
                 key={option.label}
                 onClick={() => rollDice(option.sides, option.count)}
                 disabled={isRolling}
-                variant="secondary"
-                size="medium"
-                style={{ justifyContent: 'flex-start' }}
+                style={{
+                  padding: '16px 12px',
+                  background: 'var(--surface-base)',
+                  border: '1px solid var(--border-muted)',
+                  borderRadius: 'var(--radius-md)',
+                  cursor: isRolling ? 'not-allowed' : 'pointer',
+                  transition: 'all var(--transition-fast)',
+                  fontFamily: 'inherit',
+                  textAlign: 'left',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isRolling) {
+                    e.currentTarget.style.background = 'var(--surface-subtle)';
+                    e.currentTarget.style.borderColor = 'var(--primary-mid)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'var(--surface-base)';
+                  e.currentTarget.style.borderColor = 'var(--border-muted)';
+                }}
               >
-                {option.label}
-              </Button>
+                <div style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: 4 }}>
+                  {option.label}
+                </div>
+                <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                  {option.desc}
+                </div>
+              </button>
             ))}
           </div>
         </Card>

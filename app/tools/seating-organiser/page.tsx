@@ -14,19 +14,29 @@ interface Student {
   name: string;
 }
 
-interface Desk {
+interface Seat {
   id: string;
+  tableId: string;
   studentId: string | null;
-  row: number;
-  col: number;
+}
+
+interface Table {
+  id: string;
+  seats: Seat[];
+}
+
+interface Rule {
+  id: string;
+  type: 'keep-apart' | 'seat-together';
+  student1Id: string;
+  student2Id: string;
 }
 
 interface SeatingChart {
   id: string;
   name: string;
-  rows: number;
-  cols: number;
-  desks: Desk[];
+  tables: Table[];
+  rules: Rule[];
 }
 
 export default function SeatingOrganiserPage() {
@@ -34,17 +44,26 @@ export default function SeatingOrganiserPage() {
   const [newName, setNewName] = useState('');
   const [charts, setCharts] = useState<SeatingChart[]>([]);
   const [currentChart, setCurrentChart] = useState<SeatingChart | null>(null);
-  const [rows, setRows] = useState(5);
-  const [cols, setCols] = useState(6);
+
+  // Chart creation
+  const [numTables, setNumTables] = useState(6);
+  const [seatsPerTable, setSeatsPerTable] = useState(4);
   const [chartName, setChartName] = useState('');
   const [showNewChartModal, setShowNewChartModal] = useState(false);
+
+  // Rules management
+  const [showRulesModal, setShowRulesModal] = useState(false);
+  const [ruleType, setRuleType] = useState<'keep-apart' | 'seat-together'>('keep-apart');
+  const [ruleStudent1, setRuleStudent1] = useState('');
+  const [ruleStudent2, setRuleStudent2] = useState('');
+
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkNames, setBulkNames] = useState('');
 
   // Load data
   useEffect(() => {
-    const savedStudents = getStorageItem<Student[]>('seating-students', []);
-    const savedCharts = getStorageItem<SeatingChart[]>('seating-charts', []);
+    const savedStudents = getStorageItem<Student[]>('seating-students-v2', []);
+    const savedCharts = getStorageItem<SeatingChart[]>('seating-charts-v2', []);
     setStudents(savedStudents);
     setCharts(savedCharts);
     if (savedCharts.length > 0) {
@@ -54,11 +73,11 @@ export default function SeatingOrganiserPage() {
 
   // Save data
   useEffect(() => {
-    setStorageItem('seating-students', students);
+    setStorageItem('seating-students-v2', students);
   }, [students]);
 
   useEffect(() => {
-    setStorageItem('seating-charts', charts);
+    setStorageItem('seating-charts-v2', charts);
   }, [charts]);
 
   const addStudent = () => {
@@ -89,12 +108,18 @@ export default function SeatingOrganiserPage() {
 
   const removeStudent = (id: string) => {
     setStudents(students.filter(s => s.id !== id));
-    // Also remove from any charts
+    // Remove from charts and rules
     if (currentChart) {
-      const updatedDesks = currentChart.desks.map(d =>
-        d.studentId === id ? { ...d, studentId: null } : d
+      const updatedTables = currentChart.tables.map(table => ({
+        ...table,
+        seats: table.seats.map(seat =>
+          seat.studentId === id ? { ...seat, studentId: null } : seat
+        ),
+      }));
+      const updatedRules = currentChart.rules.filter(
+        r => r.student1Id !== id && r.student2Id !== id
       );
-      const updatedChart = { ...currentChart, desks: updatedDesks };
+      const updatedChart = { ...currentChart, tables: updatedTables, rules: updatedRules };
       setCurrentChart(updatedChart);
       setCharts(charts.map(c => c.id === currentChart.id ? updatedChart : c));
     }
@@ -103,24 +128,27 @@ export default function SeatingOrganiserPage() {
   const createNewChart = () => {
     if (!chartName.trim()) return;
 
-    const desks: Desk[] = [];
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
-        desks.push({
-          id: `${row}-${col}`,
+    const tables: Table[] = [];
+    for (let i = 0; i < numTables; i++) {
+      const seats: Seat[] = [];
+      for (let j = 0; j < seatsPerTable; j++) {
+        seats.push({
+          id: `${i}-${j}`,
+          tableId: `table-${i}`,
           studentId: null,
-          row,
-          col,
         });
       }
+      tables.push({
+        id: `table-${i}`,
+        seats,
+      });
     }
 
     const newChart: SeatingChart = {
       id: Date.now().toString(),
       name: chartName.trim(),
-      rows,
-      cols,
-      desks,
+      tables,
+      rules: [],
     };
 
     setCharts([...charts, newChart]);
@@ -129,26 +157,70 @@ export default function SeatingOrganiserPage() {
     setShowNewChartModal(false);
   };
 
-  const assignStudent = (deskId: string, studentId: string) => {
+  const assignStudent = (seatId: string, tableId: string, studentId: string) => {
     if (!currentChart) return;
 
-    const updatedDesks = currentChart.desks.map(d =>
-      d.id === deskId ? { ...d, studentId } : d
-    );
+    const updatedTables = currentChart.tables.map(table => {
+      if (table.id === tableId) {
+        return {
+          ...table,
+          seats: table.seats.map(seat =>
+            seat.id === seatId ? { ...seat, studentId } : seat
+          ),
+        };
+      }
+      return table;
+    });
 
-    const updatedChart = { ...currentChart, desks: updatedDesks };
+    const updatedChart = { ...currentChart, tables: updatedTables };
     setCurrentChart(updatedChart);
     setCharts(charts.map(c => c.id === currentChart.id ? updatedChart : c));
   };
 
-  const clearDesk = (deskId: string) => {
+  const clearSeat = (seatId: string, tableId: string) => {
     if (!currentChart) return;
 
-    const updatedDesks = currentChart.desks.map(d =>
-      d.id === deskId ? { ...d, studentId: null } : d
-    );
+    const updatedTables = currentChart.tables.map(table => {
+      if (table.id === tableId) {
+        return {
+          ...table,
+          seats: table.seats.map(seat =>
+            seat.id === seatId ? { ...seat, studentId: null } : seat
+          ),
+        };
+      }
+      return table;
+    });
 
-    const updatedChart = { ...currentChart, desks: updatedDesks };
+    const updatedChart = { ...currentChart, tables: updatedTables };
+    setCurrentChart(updatedChart);
+    setCharts(charts.map(c => c.id === currentChart.id ? updatedChart : c));
+  };
+
+  const addRule = () => {
+    if (!currentChart || !ruleStudent1 || !ruleStudent2 || ruleStudent1 === ruleStudent2) return;
+
+    const newRule: Rule = {
+      id: Date.now().toString(),
+      type: ruleType,
+      student1Id: ruleStudent1,
+      student2Id: ruleStudent2,
+    };
+
+    const updatedChart = { ...currentChart, rules: [...currentChart.rules, newRule] };
+    setCurrentChart(updatedChart);
+    setCharts(charts.map(c => c.id === currentChart.id ? updatedChart : c));
+    setRuleStudent1('');
+    setRuleStudent2('');
+  };
+
+  const removeRule = (ruleId: string) => {
+    if (!currentChart) return;
+
+    const updatedChart = {
+      ...currentChart,
+      rules: currentChart.rules.filter(r => r.id !== ruleId),
+    };
     setCurrentChart(updatedChart);
     setCharts(charts.map(c => c.id === currentChart.id ? updatedChart : c));
   };
@@ -157,12 +229,84 @@ export default function SeatingOrganiserPage() {
     if (!currentChart) return;
 
     const shuffled = [...students].sort(() => Math.random() - 0.5);
-    const updatedDesks = currentChart.desks.map((desk, index) => ({
-      ...desk,
-      studentId: shuffled[index] ? shuffled[index].id : null,
+    let studentIndex = 0;
+
+    // Flatten all seats
+    const allSeats: { tableId: string; seatId: string }[] = [];
+    currentChart.tables.forEach(table => {
+      table.seats.forEach(seat => {
+        allSeats.push({ tableId: table.id, seatId: seat.id });
+      });
+    });
+
+    // Try to assign with rules (simple implementation - may not satisfy all rules)
+    let attempts = 0;
+    const maxAttempts = 100;
+
+    while (attempts < maxAttempts) {
+      // Reset assignment
+      const tempAssignment: { [seatId: string]: string } = {};
+      const shuffledStudents = [...students].sort(() => Math.random() - 0.5);
+      let valid = true;
+
+      for (let i = 0; i < Math.min(shuffledStudents.length, allSeats.length); i++) {
+        const student = shuffledStudents[i];
+        const seat = allSeats[i];
+        tempAssignment[seat.seatId] = student.id;
+      }
+
+      // Check rules
+      for (const rule of currentChart.rules) {
+        const student1Seat = Object.entries(tempAssignment).find(([_, id]) => id === rule.student1Id);
+        const student2Seat = Object.entries(tempAssignment).find(([_, id]) => id === rule.student2Id);
+
+        if (student1Seat && student2Seat) {
+          const table1 = allSeats.find(s => s.seatId === student1Seat[0])?.tableId;
+          const table2 = allSeats.find(s => s.seatId === student2Seat[0])?.tableId;
+
+          if (rule.type === 'keep-apart' && table1 === table2) {
+            valid = false;
+            break;
+          }
+          if (rule.type === 'seat-together' && table1 !== table2) {
+            valid = false;
+            break;
+          }
+        }
+      }
+
+      if (valid) {
+        // Apply assignment
+        const updatedTables = currentChart.tables.map(table => ({
+          ...table,
+          seats: table.seats.map(seat => ({
+            ...seat,
+            studentId: tempAssignment[seat.id] || null,
+          })),
+        }));
+
+        const updatedChart = { ...currentChart, tables: updatedTables };
+        setCurrentChart(updatedChart);
+        setCharts(charts.map(c => c.id === currentChart.id ? updatedChart : c));
+        return;
+      }
+
+      attempts++;
+    }
+
+    // If we couldn't satisfy rules after max attempts, just do random assignment
+    const updatedTables = currentChart.tables.map((table, tableIndex) => ({
+      ...table,
+      seats: table.seats.map((seat, seatIndex) => {
+        const flatIndex = tableIndex * currentChart.tables[0].seats.length + seatIndex;
+        return {
+          ...seat,
+          studentId: shuffled[flatIndex] ? shuffled[flatIndex].id : null,
+        };
+      }),
     }));
 
-    const updatedChart = { ...currentChart, desks: updatedDesks };
+    const updatedChart = { ...currentChart, tables: updatedTables };
     setCurrentChart(updatedChart);
     setCharts(charts.map(c => c.id === currentChart.id ? updatedChart : c));
   };
@@ -170,8 +314,12 @@ export default function SeatingOrganiserPage() {
   const clearAllSeats = () => {
     if (!currentChart) return;
 
-    const updatedDesks = currentChart.desks.map(d => ({ ...d, studentId: null }));
-    const updatedChart = { ...currentChart, desks: updatedDesks };
+    const updatedTables = currentChart.tables.map(table => ({
+      ...table,
+      seats: table.seats.map(seat => ({ ...seat, studentId: null })),
+    }));
+
+    const updatedChart = { ...currentChart, tables: updatedTables };
     setCurrentChart(updatedChart);
     setCharts(charts.map(c => c.id === currentChart.id ? updatedChart : c));
   };
@@ -193,14 +341,16 @@ export default function SeatingOrganiserPage() {
 
   const getUnassignedStudents = () => {
     if (!currentChart) return students;
-    const assignedIds = new Set(currentChart.desks.map(d => d.studentId).filter(Boolean));
+    const assignedIds = new Set(
+      currentChart.tables.flatMap(t => t.seats.map(s => s.studentId).filter(Boolean))
+    );
     return students.filter(s => !assignedIds.has(s.id));
   };
 
   return (
     <ToolLayout
       title="Seating Organiser"
-      description="Create and manage seating charts with drag-and-drop."
+      description="Create and manage table seating arrangements with rules."
     >
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         {/* Students Management */}
@@ -272,9 +422,16 @@ export default function SeatingOrganiserPage() {
             <h3 style={{ margin: 0, fontSize: '1.125rem', fontWeight: 600 }}>
               Seating Charts
             </h3>
-            <Button onClick={() => setShowNewChartModal(true)}>
-              New Chart
-            </Button>
+            <div style={{ display: 'flex', gap: 12 }}>
+              {currentChart && (
+                <Button onClick={() => setShowRulesModal(true)} variant="secondary">
+                  Manage Rules ({currentChart.rules.length})
+                </Button>
+              )}
+              <Button onClick={() => setShowNewChartModal(true)}>
+                New Chart
+              </Button>
+            </div>
           </div>
 
           {charts.length > 0 ? (
@@ -289,7 +446,7 @@ export default function SeatingOrganiserPage() {
               >
                 {charts.map(chart => (
                   <option key={chart.id} value={chart.id}>
-                    {chart.name} ({chart.rows}×{chart.cols})
+                    {chart.name} ({chart.tables.length} tables, {chart.tables[0]?.seats.length} seats each)
                   </option>
                 ))}
               </Select>
@@ -319,80 +476,102 @@ export default function SeatingOrganiserPage() {
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: `repeat(${currentChart.cols}, 100px)`,
-                  gridTemplateRows: `repeat(${currentChart.rows}, 80px)`,
-                  gap: 12,
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                  gap: 20,
                   padding: 20,
                   background: 'var(--surface-subtle)',
                   borderRadius: 'var(--radius-md)',
-                  minWidth: 'fit-content',
                 }}
               >
-                {currentChart.desks.map((desk) => {
-                  const studentName = getStudentName(desk.studentId);
-                  return (
+                {currentChart.tables.map((table, tableIndex) => (
+                  <div
+                    key={table.id}
+                    style={{
+                      background: 'var(--surface-base)',
+                      border: '2px solid var(--border-muted)',
+                      borderRadius: 'var(--radius-lg)',
+                      padding: 16,
+                    }}
+                  >
                     <div
-                      key={desk.id}
                       style={{
-                        background: studentName ? 'var(--surface-base)' : 'var(--surface-muted)',
-                        border: '1px solid var(--border-muted)',
-                        borderRadius: 'var(--radius-sm)',
-                        padding: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
                         fontSize: '0.875rem',
-                        position: 'relative',
+                        fontWeight: 600,
+                        color: 'var(--text-muted)',
+                        marginBottom: 12,
+                        textAlign: 'center',
                       }}
                     >
-                      {studentName ? (
-                        <>
-                          <div style={{ fontWeight: 600, textAlign: 'center', marginBottom: 4 }}>
-                            {studentName}
-                          </div>
-                          <button
-                            onClick={() => clearDesk(desk.id)}
+                      Table {tableIndex + 1}
+                    </div>
+                    <div style={{ display: 'grid', gap: 8 }}>
+                      {table.seats.map((seat) => {
+                        const studentName = getStudentName(seat.studentId);
+                        return (
+                          <div
+                            key={seat.id}
                             style={{
-                              position: 'absolute',
-                              top: 4,
-                              right: 4,
-                              background: 'none',
-                              border: 'none',
-                              color: 'var(--text-muted)',
-                              cursor: 'pointer',
-                              fontSize: '1rem',
-                              padding: 0,
-                              lineHeight: 1,
+                              background: studentName ? 'var(--surface-subtle)' : 'var(--surface-muted)',
+                              border: '1px solid var(--border-muted)',
+                              borderRadius: 'var(--radius-sm)',
+                              padding: 8,
+                              minHeight: 40,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '0.875rem',
+                              position: 'relative',
                             }}
                           >
-                            ×
-                          </button>
-                        </>
-                      ) : (
-                        <select
-                          onChange={(e) => e.target.value && assignStudent(desk.id, e.target.value)}
-                          value=""
-                          style={{
-                            width: '100%',
-                            padding: '4px',
-                            border: '1px solid var(--border-muted)',
-                            borderRadius: 'var(--radius-xs)',
-                            fontSize: '0.8125rem',
-                            background: 'var(--surface-base)',
-                          }}
-                        >
-                          <option value="">Assign...</option>
-                          {getUnassignedStudents().map(s => (
-                            <option key={s.id} value={s.id}>
-                              {s.name}
-                            </option>
-                          ))}
-                        </select>
-                      )}
+                            {studentName ? (
+                              <>
+                                <div style={{ fontWeight: 500 }}>{studentName}</div>
+                                <button
+                                  onClick={() => clearSeat(seat.id, table.id)}
+                                  style={{
+                                    position: 'absolute',
+                                    top: 4,
+                                    right: 4,
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'var(--text-muted)',
+                                    cursor: 'pointer',
+                                    fontSize: '1rem',
+                                    padding: 0,
+                                    lineHeight: 1,
+                                  }}
+                                >
+                                  ×
+                                </button>
+                              </>
+                            ) : (
+                              <select
+                                onChange={(e) => e.target.value && assignStudent(seat.id, table.id, e.target.value)}
+                                value=""
+                                style={{
+                                  width: '100%',
+                                  padding: '4px',
+                                  border: 'none',
+                                  borderRadius: 'var(--radius-xs)',
+                                  fontSize: '0.8125rem',
+                                  background: 'transparent',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <option value="">+ Add</option>
+                                {getUnassignedStudents().map(s => (
+                                  <option key={s.id} value={s.id}>
+                                    {s.name}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -405,11 +584,11 @@ export default function SeatingOrganiserPage() {
           </h4>
           <ul style={{ margin: 0, paddingLeft: 20, color: 'var(--text-muted)', fontSize: '0.9375rem' }}>
             <li>Add all your students first</li>
-            <li>Create a new seating chart with your classroom layout</li>
-            <li>Click on empty desks to assign students from the dropdown</li>
-            <li>Use "Randomize" to auto-assign students randomly</li>
-            <li>Click "×" on a desk to remove a student</li>
-            <li>Create multiple charts for different arrangements</li>
+            <li>Create a seating chart by specifying number of tables and seats per table</li>
+            <li>Set rules for students (who should/shouldn't sit together at same table)</li>
+            <li>Click on empty seats to assign students manually</li>
+            <li>Use "Randomize" to auto-assign respecting rules (or random if rules can't be satisfied)</li>
+            <li>Manage multiple charts for different arrangements</li>
           </ul>
         </Card>
       </div>
@@ -431,21 +610,24 @@ export default function SeatingOrganiserPage() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
           <Input
-            label="Rows"
+            label="Number of Tables"
             type="number"
             min={1}
-            max={10}
-            value={rows}
-            onChange={(e) => setRows(Number(e.target.value))}
+            max={12}
+            value={numTables}
+            onChange={(e) => setNumTables(Number(e.target.value))}
           />
           <Input
-            label="Columns"
+            label="Seats per Table"
             type="number"
-            min={1}
-            max={10}
-            value={cols}
-            onChange={(e) => setCols(Number(e.target.value))}
+            min={2}
+            max={8}
+            value={seatsPerTable}
+            onChange={(e) => setSeatsPerTable(Number(e.target.value))}
           />
+        </div>
+        <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: 16 }}>
+          Total seats: {numTables * seatsPerTable}
         </div>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
           <Button onClick={() => setShowNewChartModal(false)} variant="secondary">
@@ -455,6 +637,126 @@ export default function SeatingOrganiserPage() {
             Create Chart
           </Button>
         </div>
+      </Modal>
+
+      {/* Rules Modal */}
+      <Modal
+        isOpen={showRulesModal}
+        onClose={() => setShowRulesModal(false)}
+        title="Manage Seating Rules"
+        size="medium"
+      >
+        {currentChart && (
+          <>
+            <div style={{ marginBottom: 24 }}>
+              <h4 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 600 }}>
+                Add New Rule
+              </h4>
+              <div style={{ marginBottom: 12 }}>
+                <Select
+                  label="Rule Type"
+                  value={ruleType}
+                  onChange={(e) => setRuleType(e.target.value as 'keep-apart' | 'seat-together')}
+                >
+                  <option value="keep-apart">Keep Apart (different tables)</option>
+                  <option value="seat-together">Seat Together (same table)</option>
+                </Select>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+                <Select
+                  label="Student 1"
+                  value={ruleStudent1}
+                  onChange={(e) => setRuleStudent1(e.target.value)}
+                >
+                  <option value="">Select student</option>
+                  {students.map(s => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </Select>
+                <Select
+                  label="Student 2"
+                  value={ruleStudent2}
+                  onChange={(e) => setRuleStudent2(e.target.value)}
+                >
+                  <option value="">Select student</option>
+                  {students.filter(s => s.id !== ruleStudent1).map(s => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              <Button
+                onClick={addRule}
+                disabled={!ruleStudent1 || !ruleStudent2}
+                style={{ width: '100%' }}
+              >
+                Add Rule
+              </Button>
+            </div>
+
+            <div>
+              <h4 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 600 }}>
+                Current Rules ({currentChart.rules.length})
+              </h4>
+              {currentChart.rules.length > 0 ? (
+                <div style={{ display: 'grid', gap: 8 }}>
+                  {currentChart.rules.map(rule => {
+                    const student1 = students.find(s => s.id === rule.student1Id);
+                    const student2 = students.find(s => s.id === rule.student2Id);
+                    return (
+                      <div
+                        key={rule.id}
+                        style={{
+                          padding: 12,
+                          background: 'var(--surface-subtle)',
+                          borderRadius: 'var(--radius-sm)',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <div>
+                          <div style={{ fontWeight: 500, marginBottom: 4 }}>
+                            {student1?.name} & {student2?.name}
+                          </div>
+                          <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                            {rule.type === 'keep-apart' ? '🚫 Keep at different tables' : '✓ Seat at same table'}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => removeRule(rule.id)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'var(--text-muted)',
+                            cursor: 'pointer',
+                            fontSize: '1.25rem',
+                            padding: '4px 8px',
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>
+                  No rules set. Add rules to enforce seating constraints during randomization.
+                </div>
+              )}
+            </div>
+
+            <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end' }}>
+              <Button onClick={() => setShowRulesModal(false)}>
+                Done
+              </Button>
+            </div>
+          </>
+        )}
       </Modal>
 
       {/* Bulk Add Modal */}

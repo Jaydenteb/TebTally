@@ -21,7 +21,7 @@ export default function NoiseMeterPage() {
   const microphoneRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const animationFrameRef = useRef<number | null>(null);
-  const alertAudioRef = useRef<HTMLAudioElement | null>(null);
+  const lastAlertTimeRef = useRef<number>(0);
 
   // Load settings
   useEffect(() => {
@@ -102,24 +102,56 @@ export default function NoiseMeterPage() {
     setNoiseLevel(normalized);
 
     // Check threshold
+    const now = Date.now();
     if (normalized > threshold) {
       if (!showAlert) {
         setShowAlert(true);
+      }
+      // Play alert every 2 seconds while over threshold
+      if (now - lastAlertTimeRef.current > 2000) {
         playAlert();
+        lastAlertTimeRef.current = now;
       }
     } else {
-      setShowAlert(false);
+      if (showAlert) {
+        setShowAlert(false);
+        lastAlertTimeRef.current = 0;
+      }
     }
 
     animationFrameRef.current = requestAnimationFrame(measureNoise);
   };
 
   const playAlert = () => {
-    if (soundEnabled && alertAudioRef.current) {
-      alertAudioRef.current.currentTime = 0;
-      alertAudioRef.current.play().catch(err => {
-        console.error('Failed to play alert:', err);
-      });
+    if (!soundEnabled) return;
+
+    try {
+      // Create an attention-grabbing alert sound using Web Audio API
+      const alertContext = new AudioContext();
+      const oscillator = alertContext.createOscillator();
+      const gainNode = alertContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(alertContext.destination);
+
+      // Create an alert tone (higher frequency for attention)
+      oscillator.frequency.setValueAtTime(800, alertContext.currentTime); // High alert tone
+      oscillator.type = 'sine';
+
+      // Create a beep pattern with envelope
+      gainNode.gain.setValueAtTime(0, alertContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.3, alertContext.currentTime + 0.02);
+      gainNode.gain.linearRampToValueAtTime(0, alertContext.currentTime + 0.15);
+
+      oscillator.start(alertContext.currentTime);
+      oscillator.stop(alertContext.currentTime + 0.15);
+
+      // Cleanup
+      setTimeout(() => {
+        alertContext.close();
+      }, 200);
+    } catch (err) {
+      console.error('Failed to play alert:', err);
     }
   };
 
@@ -148,11 +180,6 @@ export default function NoiseMeterPage() {
       title="Noise Meter"
       description="Monitor classroom noise levels with visual feedback."
     >
-      <audio
-        ref={alertAudioRef}
-        src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVKzn7q1gGgs+mtzyxnMlBCuAz/LXiTgIGWi68OScTgwNU6ni77BnHgY2jtv0y3osBSp3yPDdkUELFF608OmpVxQLRp/g8r9sIwYxh9H003w0Bh1tw/Dgl0cOD1Sq5++vYhsLPpzc8sZ0Jgcqf87y1os4CRllufDlnFANDlKo4u+zahwHNY3b88t8LQUrd8jw3JJCCxRct/Dqq1gWC0WeDvPAbSQGMIbR89R9Ng"
-      />
-
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         {/* Noise Display */}
         <Card padding="large">

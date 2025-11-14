@@ -27,7 +27,6 @@ export default function WheelSpinnerPage() {
   const [result, setResult] = useState<string | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Load segments
   useEffect(() => {
@@ -139,11 +138,43 @@ export default function WheelSpinnerPage() {
   };
 
   const playSound = () => {
-    if (soundEnabled && audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch((err) => {
-        console.error('Failed to play sound:', err);
-      });
+    if (!soundEnabled) return;
+
+    try {
+      // Create a pleasant chime sound using Web Audio API
+      const audioContext = new AudioContext();
+      const oscillator1 = audioContext.createOscillator();
+      const oscillator2 = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      // Connect oscillators to gain
+      oscillator1.connect(gainNode);
+      oscillator2.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      // Create a pleasant chime with two harmonious frequencies
+      oscillator1.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+      oscillator2.frequency.setValueAtTime(659.25, audioContext.currentTime); // E5
+      oscillator1.type = 'sine';
+      oscillator2.type = 'sine';
+
+      // Create fade in and fade out envelope
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.05);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+
+      // Start and stop
+      oscillator1.start(audioContext.currentTime);
+      oscillator2.start(audioContext.currentTime);
+      oscillator1.stop(audioContext.currentTime + 1);
+      oscillator2.stop(audioContext.currentTime + 1);
+
+      // Cleanup
+      setTimeout(() => {
+        audioContext.close();
+      }, 1100);
+    } catch (err) {
+      console.error('Failed to play sound:', err);
     }
   };
 
@@ -182,12 +213,6 @@ export default function WheelSpinnerPage() {
       title="Wheel Spinner"
       description="Customizable spinning wheel for random selection."
     >
-      {/* Audio element */}
-      <audio
-        ref={audioRef}
-        src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVKzn7q1gGgs+mtzyxnMlBCuAz/LXiTgIGWi68OScTgwNU6ni77BnHgY2jtv0y3osBSp3yPDdkUELFF608OmpVxQLRp/g8r9sIwYxh9H003w0Bh1tw/Dgl0cOD1Sq5++vYhsLPpzc8sZ0Jgcqf87y1os4CRllufDlnFANDlKo4u+zahwHNY3b88t8LQUrd8jw3JJCCxRct/Dqq1gWC0WeDvPAbSQGMIbR89R9Ng"
-      />
-
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         {/* Wheel Display */}
         <Card padding="large">

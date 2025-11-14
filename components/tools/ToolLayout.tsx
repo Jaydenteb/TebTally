@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import BrandLogo from '@/components/BrandLogo';
 
 interface ToolLayoutProps {
   children: ReactNode;
@@ -13,14 +12,11 @@ interface ToolLayoutProps {
 export default function ToolLayout({ children, title, description }: ToolLayoutProps) {
   return (
     <div className="tool-page">
-      <header className="tool-header">
+      <header className="tool-header-simple">
         <div className="container">
-          <div className="tool-header-top">
-            <BrandLogo />
-            <Link href="/tools" className="back-link">
-              ← Back to Tools
-            </Link>
-          </div>
+          <Link href="/tools" className="back-link">
+            ← Back to Tools
+          </Link>
           <div className="tool-header-content">
             <h1 className="tool-title">{title}</h1>
             {description && <p className="tool-description">{description}</p>}
@@ -33,14 +29,6 @@ export default function ToolLayout({ children, title, description }: ToolLayoutP
           {children}
         </div>
       </main>
-
-      <footer className="tool-footer">
-        <div className="container">
-          <p className="text-small text-muted">
-            &copy; {new Date().getFullYear()} TebTally · <Link href="/privacy">Privacy</Link> · <Link href="/terms">Terms</Link>
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -6,6 +6,8 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
+import PremiumCallout from '@/components/tools/PremiumCallout';
+import LookingForMore from '@/components/tools/LookingForMore';
 import { getStorageItem, setStorageItem, getSharedStudents, setSharedStudents, clearSharedStudents } from '@/lib/storage';
 
 interface Student {
@@ -157,12 +159,35 @@ export default function NamePickerPage() {
   const unpickedCount = students.filter(s => !s.picked).length;
   const pickedCount = students.filter(s => s.picked).length;
 
+  const premiumApps = [
+    {
+      name: 'SpellTally',
+      description: 'Weekly spelling practice and tests with teacher dashboards.',
+      url: process.env.NEXT_PUBLIC_SPELLTALLY_URL || 'http://localhost:3001',
+      badge: 'Popular',
+    },
+    {
+      name: 'WritingTally',
+      description: 'End-to-end writing assessments with rubrics and AI feedback.',
+      url: process.env.NEXT_PUBLIC_WRITETALLY_URL || 'http://localhost:3002',
+      badge: 'AI-Powered',
+    },
+  ];
+
   return (
     <ToolLayout
       title="Name Picker"
       description="Random student selector with tracking of who has been called."
     >
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <PremiumCallout
+          title="Want engaging spelling practice?"
+          description="SpellTally provides weekly spelling tests with student dashboards and automatic grading."
+          appName="SpellTally"
+          appUrl={process.env.NEXT_PUBLIC_SPELLTALLY_URL || 'http://localhost:3001'}
+          badge="Premium"
+        />
+
         {/* Main Pick Display */}
         <Card padding="large">
           <div style={{ textAlign: 'center' }}>
@@ -374,6 +399,8 @@ export default function NamePickerPage() {
           </Button>
         </div>
       </Modal>
+
+      <LookingForMore apps={premiumApps} />
     </ToolLayout>
   );
 }

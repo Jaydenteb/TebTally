@@ -34,8 +34,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               TebTally
             </a>
             <nav className="flex items-center gap-4">
-              <a href="#apps" className="nav-link">Apps</a>
-              <a href="#about" className="nav-link">About</a>
+              <a href="/#apps" className="nav-link">Apps</a>
+              <a href="/#about" className="nav-link">About</a>
               <a href="/privacy" className="nav-link">Privacy</a>
               <a href="/terms" className="nav-link">Terms</a>
             </nav>

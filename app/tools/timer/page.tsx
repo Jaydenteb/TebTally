@@ -7,6 +7,8 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Slider from '@/components/ui/Slider';
 import Toggle from '@/components/ui/Toggle';
+import PremiumCallout from '@/components/tools/PremiumCallout';
+import LookingForMore from '@/components/tools/LookingForMore';
 import { getStorageItem, setStorageItem } from '@/lib/storage';
 
 interface TimerSettings {
@@ -118,11 +120,34 @@ export default function TimerPage() {
     return ((total - timeLeft) / total) * 100;
   };
 
+  const premiumApps = [
+    {
+      name: 'TrackTally',
+      description: 'Fast, offline-friendly behaviour incident logging for classrooms.',
+      url: process.env.NEXT_PUBLIC_TRACKTALLY_URL || 'http://localhost:3003',
+      badge: 'Offline First',
+    },
+    {
+      name: 'SpellTally',
+      description: 'Weekly spelling practice and tests with teacher dashboards.',
+      url: process.env.NEXT_PUBLIC_SPELLTALLY_URL || 'http://localhost:3001',
+      badge: 'Popular',
+    },
+  ];
+
   return (
     <ToolLayout
       title="Simple Timer"
       description="Countdown timer with customizable duration and alarm sounds."
     >
+      <PremiumCallout
+        title="Need more classroom management tools?"
+        description="TrackTally helps you log behaviour incidents quickly with offline support and detailed analytics."
+        appName="TrackTally"
+        appUrl={process.env.NEXT_PUBLIC_TRACKTALLY_URL || 'http://localhost:3003'}
+        badge="Premium"
+      />
+
       {/* Hidden audio element for alarm */}
       <audio
         ref={audioRef}
@@ -282,6 +307,8 @@ export default function TimerPage() {
             <li>An alarm will sound when the timer reaches zero (if enabled)</li>
           </ul>
         </Card>
+
+        <LookingForMore apps={premiumApps} />
       </div>
     </ToolLayout>
   );

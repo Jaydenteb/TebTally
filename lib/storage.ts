@@ -63,3 +63,55 @@ export function createStorageSync<T>(key: string, defaultValue: T) {
     remove: () => removeStorageItem(key),
   };
 }
+
+/**
+ * Shared student names management
+ * Provides a global list of student names that can be used across all tools
+ */
+const SHARED_STUDENTS_KEY = 'shared-student-names';
+
+export interface Student {
+  id: string;
+  name: string;
+}
+
+export function getSharedStudents(): Student[] {
+  return getStorageItem<Student[]>(SHARED_STUDENTS_KEY, []);
+}
+
+export function setSharedStudents(students: Student[]): void {
+  setStorageItem(SHARED_STUDENTS_KEY, students);
+}
+
+export function addSharedStudent(name: string): Student {
+  const students = getSharedStudents();
+  const newStudent: Student = {
+    id: crypto.randomUUID(),
+    name: name.trim(),
+  };
+  students.push(newStudent);
+  setSharedStudents(students);
+  return newStudent;
+}
+
+export function removeSharedStudent(id: string): void {
+  const students = getSharedStudents();
+  const filtered = students.filter(s => s.id !== id);
+  setSharedStudents(filtered);
+}
+
+export function updateSharedStudent(id: string, name: string): void {
+  const students = getSharedStudents();
+  const updated = students.map(s =>
+    s.id === id ? { ...s, name: name.trim() } : s
+  );
+  setSharedStudents(updated);
+}
+
+export function clearSharedStudents(): void {
+  setSharedStudents([]);
+}
+
+export function hasSharedStudents(): boolean {
+  return getSharedStudents().length > 0;
+}

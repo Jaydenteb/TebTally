@@ -7,6 +7,8 @@ import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import Modal from '@/components/ui/Modal';
+import PremiumCallout from '@/components/tools/PremiumCallout';
+import LookingForMore from '@/components/tools/LookingForMore';
 import { getStorageItem, setStorageItem, getSharedStudents, setSharedStudents, clearSharedStudents } from '@/lib/storage';
 
 interface Student {
@@ -169,12 +171,35 @@ export default function GroupPickerPage() {
     });
   };
 
+  const premiumApps = [
+    {
+      name: 'TrackTally',
+      description: 'Fast, offline-friendly behaviour incident logging for classrooms.',
+      url: process.env.NEXT_PUBLIC_TRACKTALLY_URL || 'http://localhost:3003',
+      badge: 'Offline First',
+    },
+    {
+      name: 'WritingTally',
+      description: 'End-to-end writing assessments with rubrics and AI feedback.',
+      url: process.env.NEXT_PUBLIC_WRITETALLY_URL || 'http://localhost:3002',
+      badge: 'AI-Powered',
+    },
+  ];
+
   return (
     <ToolLayout
       title="Group Picker"
       description="Create random groups with balanced distribution."
     >
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
+        <PremiumCallout
+          title="Need comprehensive student management?"
+          description="WritingTally provides end-to-end writing assessments with rubrics, peer review, and AI-powered feedback."
+          appName="WritingTally"
+          appUrl={process.env.NEXT_PUBLIC_WRITETALLY_URL || 'http://localhost:3002'}
+          badge="Premium"
+        />
+
         {/* Setup Card */}
         <Card padding="large">
           <h3 style={{ margin: '0 0 20px', fontSize: '1.25rem', fontWeight: 600 }}>
@@ -433,6 +458,8 @@ export default function GroupPickerPage() {
           </Button>
         </div>
       </Modal>
+
+      <LookingForMore apps={premiumApps} />
     </ToolLayout>
   );
 }

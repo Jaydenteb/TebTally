@@ -17,7 +17,6 @@ export default function Page() {
           </span>
         </div>
         <p className="subtitle">A suite of classroom tools for spelling, writing, and behaviour tracking.</p>
-        <p className="subtitle" style={{ marginTop: 4 }}>Jayden Tebble trading as TebTally. ASIC registration pending.</p>
       </section>
 
       <section id="free-tools">
@@ -26,13 +25,13 @@ export default function Page() {
         </h2>
         <div className="grid">
           <AppCard
-            title="Classroom Timer"
-            href="/tools/timer"
-            description="A simple countdown timer for classroom activities and transitions."/>
+            title="Timers"
+            href="/tools/timers"
+            description="Countdown timers for classroom activities, transitions, and time management."/>
           <AppCard
-            title="Random Name Picker"
-            href="/tools/name-picker"
-            description="Randomly select student names for participation and activities."/>
+            title="Class Tools"
+            href="/tools/class-tools"
+            description="Random name picker, group maker, and other essential classroom utilities."/>
         </div>
       </section>
 
@@ -48,20 +47,17 @@ export default function Page() {
             title="SpellTally"
             href={links.spelltally}
             description="Weekly spelling practice and tests with teacher dashboards."
-            isPremium={true}
-            pricing="14-day free trial • From $9.99/month"/>
+            isPremium={true}/>
           <AppCard
             title="WritingTally"
             href={links.writetally}
             description="End-to-end writing assessments with rubrics and AI feedback."
-            isPremium={true}
-            pricing="14-day free trial • From $9.99/month"/>
+            isPremium={true}/>
           <AppCard
             title="TrackTally"
             href={links.tracktally}
             description="Fast, offline-friendly behaviour incident logging for classrooms."
-            isPremium={true}
-            pricing="14-day free trial • From $9.99/month"/>
+            isPremium={true}/>
         </div>
       </section>
 

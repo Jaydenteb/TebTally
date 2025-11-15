@@ -5,6 +5,7 @@ import ToolLayout from '@/components/tools/ToolLayout';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
+import Select from '@/components/ui/Select';
 import PremiumCallout from '@/components/tools/PremiumCallout';
 import LookingForMore from '@/components/tools/LookingForMore';
 import { getStorageItem, setStorageItem } from '@/lib/storage';
@@ -17,10 +18,37 @@ interface ScheduleBlock {
   icon: string;
 }
 
+type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday';
+
+interface WeekSchedule {
+  monday: ScheduleBlock[];
+  tuesday: ScheduleBlock[];
+  wednesday: ScheduleBlock[];
+  thursday: ScheduleBlock[];
+  friday: ScheduleBlock[];
+}
+
+const DAYS: { key: DayOfWeek; label: string; short: string }[] = [
+  { key: 'monday', label: 'Monday', short: 'Mon' },
+  { key: 'tuesday', label: 'Tuesday', short: 'Tue' },
+  { key: 'wednesday', label: 'Wednesday', short: 'Wed' },
+  { key: 'thursday', label: 'Thursday', short: 'Thu' },
+  { key: 'friday', label: 'Friday', short: 'Fri' },
+];
+
 const SUGGESTED_ICONS = ['📚', '✏️', '🔬', '🎨', '🎵', '⚽', '🍎', '📖', '🧮', '🌍', '💻', '🎭', '🏃', '🔔'];
 
+const getDefaultWeekSchedule = (): WeekSchedule => ({
+  monday: [],
+  tuesday: [],
+  wednesday: [],
+  thursday: [],
+  friday: [],
+});
+
 export default function DayboardPage() {
-  const [blocks, setBlocks] = useState<ScheduleBlock[]>([]);
+  const [weekSchedule, setWeekSchedule] = useState<WeekSchedule>(getDefaultWeekSchedule());
+  const [selectedDay, setSelectedDay] = useState<DayOfWeek>('monday');
   const [displayMode, setDisplayMode] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -32,10 +60,20 @@ export default function DayboardPage() {
     icon: '📚'
   });
 
+  // Get current day of week
+  const getCurrentDayOfWeek = (): DayOfWeek => {
+    const dayIndex = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const dayMap: DayOfWeek[] = ['monday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'monday'];
+    return dayMap[dayIndex] || 'monday';
+  };
+
   // Load saved schedule
   useEffect(() => {
-    const savedBlocks = getStorageItem<ScheduleBlock[]>('dayboard-schedule', []);
-    setBlocks(savedBlocks);
+    const savedSchedule = getStorageItem<WeekSchedule>('dayboard-week-schedule', getDefaultWeekSchedule());
+    setWeekSchedule(savedSchedule);
+
+    // Set selected day to current day
+    setSelectedDay(getCurrentDayOfWeek());
   }, []);
 
   // Update current time every second
@@ -57,6 +95,8 @@ export default function DayboardPage() {
     }
   }, [displayMode]);
 
+  const currentDayBlocks = weekSchedule[selectedDay];
+
   const addBlock = () => {
     if (!newBlock.startTime || !newBlock.endTime || !newBlock.subject) {
       alert('Please fill in all fields');
@@ -68,12 +108,17 @@ export default function DayboardPage() {
       ...newBlock
     };
 
-    const updatedBlocks = [...blocks, block].sort((a, b) =>
+    const updatedBlocks = [...currentDayBlocks, block].sort((a, b) =>
       a.startTime.localeCompare(b.startTime)
     );
 
-    setBlocks(updatedBlocks);
-    setStorageItem('dayboard-schedule', updatedBlocks);
+    const updatedSchedule = {
+      ...weekSchedule,
+      [selectedDay]: updatedBlocks
+    };
+
+    setWeekSchedule(updatedSchedule);
+    setStorageItem('dayboard-week-schedule', updatedSchedule);
 
     // Reset form
     setNewBlock({
@@ -85,43 +130,76 @@ export default function DayboardPage() {
   };
 
   const removeBlock = (id: string) => {
-    const updatedBlocks = blocks.filter(b => b.id !== id);
-    setBlocks(updatedBlocks);
-    setStorageItem('dayboard-schedule', updatedBlocks);
+    const updatedBlocks = currentDayBlocks.filter(b => b.id !== id);
+    const updatedSchedule = {
+      ...weekSchedule,
+      [selectedDay]: updatedBlocks
+    };
+    setWeekSchedule(updatedSchedule);
+    setStorageItem('dayboard-week-schedule', updatedSchedule);
   };
 
-  const clearSchedule = () => {
-    if (confirm('Are you sure you want to clear the entire schedule?')) {
-      setBlocks([]);
-      setStorageItem('dayboard-schedule', []);
+  const clearDay = () => {
+    if (confirm(`Are you sure you want to clear ${DAYS.find(d => d.key === selectedDay)?.label}'s schedule?`)) {
+      const updatedSchedule = {
+        ...weekSchedule,
+        [selectedDay]: []
+      };
+      setWeekSchedule(updatedSchedule);
+      setStorageItem('dayboard-week-schedule', updatedSchedule);
     }
   };
 
-  const getCurrentBlock = () => {
+  const clearAllWeek = () => {
+    if (confirm('Are you sure you want to clear the ENTIRE WEEK schedule?')) {
+      setWeekSchedule(getDefaultWeekSchedule());
+      setStorageItem('dayboard-week-schedule', getDefaultWeekSchedule());
+    }
+  };
+
+  const copyFromDay = (sourceDay: DayOfWeek) => {
+    const sourceBlocks = weekSchedule[sourceDay];
+
+    if (sourceBlocks.length === 0) {
+      alert(`${DAYS.find(d => d.key === sourceDay)?.label} has no schedule to copy.`);
+      return;
+    }
+
+    if (currentDayBlocks.length > 0) {
+      if (!confirm(`This will replace ${DAYS.find(d => d.key === selectedDay)?.label}'s current schedule. Continue?`)) {
+        return;
+      }
+    }
+
+    // Create new blocks with new IDs
+    const copiedBlocks = sourceBlocks.map(block => ({
+      ...block,
+      id: `${Date.now()}-${Math.random()}`
+    }));
+
+    const updatedSchedule = {
+      ...weekSchedule,
+      [selectedDay]: copiedBlocks
+    };
+
+    setWeekSchedule(updatedSchedule);
+    setStorageItem('dayboard-week-schedule', updatedSchedule);
+  };
+
+  const getCurrentBlock = (blocks: ScheduleBlock[]) => {
     const now = currentTime.toTimeString().slice(0, 5);
     return blocks.find(block => now >= block.startTime && now < block.endTime);
   };
 
-  const getNextBlock = () => {
+  const getNextBlock = (blocks: ScheduleBlock[]) => {
     const now = currentTime.toTimeString().slice(0, 5);
     return blocks.find(block => now < block.startTime);
   };
 
-  const getProgressPercentage = () => {
-    if (blocks.length === 0) return 0;
-
+  const getProgressPercentage = (block: ScheduleBlock) => {
     const now = currentTime.toTimeString().slice(0, 5);
-    const firstBlock = blocks[0];
-    const lastBlock = blocks[blocks.length - 1];
-
-    if (now < firstBlock.startTime) return 0;
-    if (now >= lastBlock.endTime) return 100;
-
-    const currentBlock = getCurrentBlock();
-    if (!currentBlock) return 0;
-
-    const [startHour, startMin] = currentBlock.startTime.split(':').map(Number);
-    const [endHour, endMin] = currentBlock.endTime.split(':').map(Number);
+    const [startHour, startMin] = block.startTime.split(':').map(Number);
+    const [endHour, endMin] = block.endTime.split(':').map(Number);
     const [nowHour, nowMin] = now.split(':').map(Number);
 
     const startMinutes = startHour * 60 + startMin;
@@ -138,9 +216,15 @@ export default function DayboardPage() {
     return `${hour12}:${min.toString().padStart(2, '0')} ${period}`;
   };
 
-  const currentBlock = getCurrentBlock();
-  const nextBlock = getNextBlock();
-  const progressPercentage = getProgressPercentage();
+  const getTotalBlocksForWeek = () => {
+    return Object.values(weekSchedule).reduce((sum, dayBlocks) => sum + dayBlocks.length, 0);
+  };
+
+  // For display mode, use current day's schedule
+  const displayDayKey = getCurrentDayOfWeek();
+  const displayBlocks = weekSchedule[displayDayKey];
+  const currentBlock = getCurrentBlock(displayBlocks);
+  const nextBlock = getNextBlock(displayBlocks);
 
   const premiumApps = [
     {
@@ -265,7 +349,7 @@ export default function DayboardPage() {
             }}>
               <div style={{
                 height: '100%',
-                width: `${progressPercentage}%`,
+                width: `${getProgressPercentage(currentBlock)}%`,
                 background: 'linear-gradient(90deg, #667eea, #764ba2)',
                 transition: 'width 1s linear',
                 borderRadius: '999px'
@@ -275,86 +359,104 @@ export default function DayboardPage() {
         )}
 
         {/* Schedule Overview */}
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          borderRadius: 'var(--radius-md)',
-          padding: '1.5rem',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
-        }}>
-          <h3 style={{
-            fontSize: '1.5rem',
-            fontWeight: 700,
-            marginBottom: '1rem',
-            color: 'var(--text-base)'
-          }}>
-            Today's Schedule
-          </h3>
-
+        {displayBlocks.length > 0 ? (
           <div style={{
-            display: 'grid',
-            gap: '0.75rem'
+            background: 'rgba(255, 255, 255, 0.95)',
+            borderRadius: 'var(--radius-md)',
+            padding: '1.5rem',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
           }}>
-            {blocks.map(block => {
-              const isCurrent = currentBlock?.id === block.id;
-              const isPast = currentTime.toTimeString().slice(0, 5) >= block.endTime;
+            <h3 style={{
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              marginBottom: '1rem',
+              color: 'var(--text-base)'
+            }}>
+              {DAYS.find(d => d.key === displayDayKey)?.label}'s Schedule
+            </h3>
 
-              return (
-                <div
-                  key={block.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    padding: '1rem',
-                    background: isCurrent
-                      ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))'
-                      : isPast
-                      ? 'var(--surface-subtle)'
-                      : 'white',
-                    borderRadius: 'var(--radius-md)',
-                    border: isCurrent ? '3px solid #667eea' : '1px solid var(--border-muted)',
-                    opacity: isPast && !isCurrent ? 0.5 : 1,
-                    transform: isCurrent ? 'scale(1.02)' : 'scale(1)',
-                    transition: 'all var(--transition-normal)',
-                    boxShadow: isCurrent ? '0 4px 12px rgba(102, 126, 234, 0.3)' : 'none'
-                  }}
-                >
-                  <div style={{ fontSize: '2.5rem' }}>
-                    {block.icon}
+            <div style={{
+              display: 'grid',
+              gap: '0.75rem'
+            }}>
+              {displayBlocks.map(block => {
+                const isCurrent = currentBlock?.id === block.id;
+                const isPast = currentTime.toTimeString().slice(0, 5) >= block.endTime;
+
+                return (
+                  <div
+                    key={block.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '1rem',
+                      padding: '1rem',
+                      background: isCurrent
+                        ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))'
+                        : isPast
+                        ? 'var(--surface-subtle)'
+                        : 'white',
+                      borderRadius: 'var(--radius-md)',
+                      border: isCurrent ? '3px solid #667eea' : '1px solid var(--border-muted)',
+                      opacity: isPast && !isCurrent ? 0.5 : 1,
+                      transform: isCurrent ? 'scale(1.02)' : 'scale(1)',
+                      transition: 'all var(--transition-normal)',
+                      boxShadow: isCurrent ? '0 4px 12px rgba(102, 126, 234, 0.3)' : 'none'
+                    }}
+                  >
+                    <div style={{ fontSize: '2.5rem' }}>
+                      {block.icon}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        fontSize: '1.25rem',
+                        fontWeight: 600,
+                        color: 'var(--text-base)'
+                      }}>
+                        {block.subject}
+                      </div>
+                      <div style={{
+                        fontSize: '0.875rem',
+                        color: 'var(--text-muted)',
+                        marginTop: '0.25rem'
+                      }}>
+                        {formatTime12h(block.startTime)} - {formatTime12h(block.endTime)}
+                      </div>
+                    </div>
+                    {isCurrent && (
+                      <div style={{
+                        padding: '0.5rem 1rem',
+                        background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                        color: 'white',
+                        borderRadius: '999px',
+                        fontSize: '0.875rem',
+                        fontWeight: 600
+                      }}>
+                        NOW
+                      </div>
+                    )}
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{
-                      fontSize: '1.25rem',
-                      fontWeight: 600,
-                      color: 'var(--text-base)'
-                    }}>
-                      {block.subject}
-                    </div>
-                    <div style={{
-                      fontSize: '0.875rem',
-                      color: 'var(--text-muted)',
-                      marginTop: '0.25rem'
-                    }}>
-                      {formatTime12h(block.startTime)} - {formatTime12h(block.endTime)}
-                    </div>
-                  </div>
-                  {isCurrent && (
-                    <div style={{
-                      padding: '0.5rem 1rem',
-                      background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                      color: 'white',
-                      borderRadius: '999px',
-                      fontSize: '0.875rem',
-                      fontWeight: 600
-                    }}>
-                      NOW
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.95)',
+            borderRadius: 'var(--radius-md)',
+            padding: '3rem',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📅</div>
+            <p style={{
+              fontSize: '1.5rem',
+              color: 'var(--text-muted)'
+            }}>
+              No schedule for {DAYS.find(d => d.key === displayDayKey)?.label}
+            </p>
+          </div>
+        )}
 
         {/* Next Up Preview */}
         {nextBlock && !currentBlock && (
@@ -406,17 +508,109 @@ export default function DayboardPage() {
   return (
     <ToolLayout
       title="Class Dayboard"
-      description="Create and display your daily class schedule with live progress tracking."
+      description="Plan your weekly class schedule with live progress tracking for display."
     >
       <PremiumCallout
         title="Want Advanced Planning Features?"
-        description="Upgrade to get weekly templates, drag-and-drop scheduling, special events, and PDF exports."
+        description="Upgrade to get drag-and-drop scheduling, special events, multiple class periods, and PDF exports."
         appName="TebTally Pro"
         appUrl="#"
         badge="Coming Soon"
       />
 
       <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+
+        {/* Week Overview Stats */}
+        <Card padding="medium" style={{ marginBottom: '1.5rem' }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '1rem'
+          }}>
+            <div>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, margin: 0 }}>
+                Weekly Schedule
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: '0.25rem 0 0' }}>
+                {getTotalBlocksForWeek()} total blocks across the week
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              {DAYS.map(day => (
+                <div
+                  key={day.key}
+                  style={{
+                    padding: '0.5rem 0.75rem',
+                    background: weekSchedule[day.key].length > 0
+                      ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))'
+                      : 'var(--surface-subtle)',
+                    borderRadius: 'var(--radius-sm)',
+                    fontSize: '0.75rem',
+                    fontWeight: 500,
+                    color: weekSchedule[day.key].length > 0 ? '#667eea' : 'var(--text-muted)'
+                  }}
+                  title={`${day.label}: ${weekSchedule[day.key].length} blocks`}
+                >
+                  {day.short} ({weekSchedule[day.key].length})
+                </div>
+              ))}
+              {getTotalBlocksForWeek() > 0 && (
+                <Button
+                  variant="danger"
+                  size="small"
+                  onClick={clearAllWeek}
+                >
+                  Clear Week
+                </Button>
+              )}
+            </div>
+          </div>
+        </Card>
+
+        {/* Day Selector Tabs */}
+        <div style={{
+          display: 'flex',
+          gap: '0.5rem',
+          marginBottom: '1.5rem',
+          borderBottom: '2px solid var(--surface-subtle)',
+          overflowX: 'auto',
+          flexWrap: 'wrap'
+        }}>
+          {DAYS.map(day => (
+            <button
+              key={day.key}
+              onClick={() => setSelectedDay(day.key)}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: 'none',
+                border: 'none',
+                borderBottom: selectedDay === day.key ? '3px solid #667eea' : '3px solid transparent',
+                color: selectedDay === day.key ? '#667eea' : 'var(--text-muted)',
+                fontWeight: selectedDay === day.key ? 600 : 400,
+                cursor: 'pointer',
+                fontSize: '1rem',
+                marginBottom: '-2px',
+                transition: 'all var(--transition-fast)',
+                position: 'relative'
+              }}
+            >
+              {day.label}
+              {weekSchedule[day.key].length > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '0.25rem',
+                  right: '0.25rem',
+                  width: '8px',
+                  height: '8px',
+                  background: '#667eea',
+                  borderRadius: '50%'
+                }} />
+              )}
+            </button>
+          ))}
+        </div>
 
         {/* Add Schedule Block */}
         <Card padding="large">
@@ -425,7 +619,7 @@ export default function DayboardPage() {
             fontWeight: 600,
             marginBottom: '1.5rem'
           }}>
-            Add Schedule Block
+            Add Block for {DAYS.find(d => d.key === selectedDay)?.label}
           </h3>
 
           <div style={{
@@ -505,17 +699,36 @@ export default function DayboardPage() {
             </div>
           </div>
 
-          <Button
-            variant="primary"
-            size="large"
-            onClick={addBlock}
-          >
-            Add Block
-          </Button>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <Button
+              variant="primary"
+              size="large"
+              onClick={addBlock}
+            >
+              Add Block
+            </Button>
+
+            {/* Copy from another day */}
+            {DAYS.filter(d => d.key !== selectedDay && weekSchedule[d.key].length > 0).length > 0 && (
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>or copy from:</span>
+                {DAYS.filter(d => d.key !== selectedDay && weekSchedule[d.key].length > 0).map(day => (
+                  <Button
+                    key={day.key}
+                    variant="secondary"
+                    size="small"
+                    onClick={() => copyFromDay(day.key)}
+                  >
+                    {day.short}
+                  </Button>
+                ))}
+              </div>
+            )}
+          </div>
         </Card>
 
-        {/* Current Schedule */}
-        {blocks.length > 0 && (
+        {/* Current Day Schedule */}
+        {currentDayBlocks.length > 0 && (
           <Card padding="large" style={{ marginTop: '1.5rem' }}>
             <div style={{
               display: 'flex',
@@ -526,7 +739,7 @@ export default function DayboardPage() {
               gap: '1rem'
             }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 600, margin: 0 }}>
-                Today's Schedule ({blocks.length} blocks)
+                {DAYS.find(d => d.key === selectedDay)?.label}'s Schedule ({currentDayBlocks.length} blocks)
               </h3>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <Button
@@ -538,17 +751,18 @@ export default function DayboardPage() {
                 <Button
                   variant="danger"
                   size="small"
-                  onClick={clearSchedule}
+                  onClick={clearDay}
                 >
-                  Clear All
+                  Clear {DAYS.find(d => d.key === selectedDay)?.short}
                 </Button>
               </div>
             </div>
 
             <div style={{ display: 'grid', gap: '0.75rem' }}>
-              {blocks.map(block => {
-                const isCurrent = currentBlock?.id === block.id;
-                const isPast = currentTime.toTimeString().slice(0, 5) >= block.endTime;
+              {currentDayBlocks.map(block => {
+                const isToday = selectedDay === getCurrentDayOfWeek();
+                const isCurrent = isToday && getCurrentBlock(currentDayBlocks)?.id === block.id;
+                const isPast = isToday && currentTime.toTimeString().slice(0, 5) >= block.endTime;
 
                 return (
                   <div
@@ -624,7 +838,7 @@ export default function DayboardPage() {
           </Card>
         )}
 
-        {blocks.length === 0 && (
+        {currentDayBlocks.length === 0 && (
           <Card padding="large" style={{ marginTop: '1.5rem' }}>
             <div style={{
               textAlign: 'center',
@@ -633,7 +847,7 @@ export default function DayboardPage() {
             }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📅</div>
               <p style={{ fontSize: '1.125rem', marginBottom: '0.5rem' }}>
-                No schedule blocks yet
+                No schedule blocks for {DAYS.find(d => d.key === selectedDay)?.label} yet
               </p>
               <p>Add your first block to get started!</p>
             </div>

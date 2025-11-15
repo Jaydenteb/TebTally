@@ -24,7 +24,7 @@ export default function Page() {
       title: 'Classroom Tools',
       description: 'Random selectors, seating charts, noise meter, and more.',
       icon: '🎯',
-      count: 7,
+      count: 8,
     },
   ]
 

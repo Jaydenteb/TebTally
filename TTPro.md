@@ -54,23 +54,46 @@ TebTally Hub (Landing Site) - Current site at tebtally.com
 - React 19 - same as current
 - TypeScript - same as current
 - Tailwind CSS or keep current CSS approach
-- React Query for data fetching
+- React Query (TanStack Query) for data fetching and caching
 - Zustand or Jotai for state management
 
-**Backend:**
-- Next.js API Routes (serverless functions)
-- Supabase or Firebase for:
-  - Authentication (email/password, Google OAuth)
-  - PostgreSQL database
-  - Real-time subscriptions
-  - Cloud storage for exports
+**Backend & Database:**
+- Next.js API Routes (serverless functions on Vercel)
+- **Neon PostgreSQL** - Serverless Postgres database
+  - Autoscaling
+  - Branching for development/staging
+  - Built-in connection pooling
+- **Prisma** or **Drizzle ORM** for database access and migrations
 
-**Hosting:**
-- Vercel (Next.js optimal)
-- Supabase for database/auth
+**Authentication:**
+- **NextAuth.js v5 (Auth.js)** for authentication
+- **Google OAuth** as primary authentication method
+- Email/password as secondary option
+- Session management with JWT tokens
+- Secure httpOnly cookies
+
+**Hosting & Deployment:**
+- **Vercel** for hosting and serverless functions
+  - Preview deployments for every PR
+  - Environment variables management
+  - Edge functions for global performance
+- **Neon** for database hosting
+  - Database branches per Vercel preview deployment
 
 **Payments:**
-- Stripe for subscriptions
+- **Stripe** for subscription management
+  - Stripe Customer Portal for self-service
+  - Webhooks for subscription events
+
+**File Storage:**
+- **Vercel Blob** for PDF exports and file uploads
+- Or **Cloudflare R2** for larger storage needs
+
+**Email:**
+- **Resend** or **SendGrid** for transactional emails
+  - Welcome emails
+  - Password resets
+  - Subscription notifications
 
 ---
 
@@ -502,15 +525,18 @@ Analytics > Overview
 **Goal:** Set up Pro infrastructure and migrate 2 core tools
 
 **Tasks:**
-- Set up Supabase (database, auth, storage)
-- Build Pro dashboard shell (navigation, routing)
-- Implement authentication (email + Google OAuth)
-- Build subscription system with Stripe
-- Migrate Dayboard to Pro with cloud sync
+- Set up **Neon PostgreSQL** database with Prisma ORM
+- Set up **NextAuth.js** with Google OAuth as primary provider
+- Build Pro dashboard shell (navigation, routing, layouts)
+- Create database schema (users, classes, students, schedules, logs)
+- Implement authentication flows (sign in, sign out, session management)
+- Build subscription system with **Stripe** (checkout, webhooks, customer portal)
+- Set up **Vercel** deployment with environment variables
+- Migrate Dayboard to Pro with cloud sync (save to Neon instead of localStorage)
 - Migrate Energy Dial to Pro with cloud sync
-- Basic settings page (profile, subscription)
+- Basic settings page (profile, subscription management, danger zone)
 
-**Deliverable:** Users can sign up, subscribe, and use Dayboard Pro + Energy Dial Pro with cloud sync
+**Deliverable:** Users can sign up with Google, subscribe via Stripe, and use Dayboard Pro + Energy Dial Pro with cloud sync across devices
 
 ---
 
@@ -642,16 +668,20 @@ Analytics > Overview
 ## 🔐 Technical Considerations
 
 ### **Authentication:**
-- Email/password with email verification
-- Google OAuth (most teachers have Google)
+- **NextAuth.js v5 (Auth.js)** handles all authentication flows
+- **Google OAuth** as primary sign-in method (teachers already have Google accounts)
+- Email/password as secondary option with email verification
 - Future: Microsoft OAuth (some schools use Office 365)
-- Session management with secure httpOnly cookies
-- Password reset flow
+- Session management with secure httpOnly cookies and JWT
+- Password reset flow using email magic links
+- CSRF protection built-in with NextAuth.js
 
 ### **Authorization:**
-- Row-level security in Supabase
-- Users can only access their own data
-- Future: Team/school accounts with shared access
+- Database-level access control using Prisma middleware
+- API routes validate user session before data access
+- Users can only access their own data (user_id foreign key checks)
+- Middleware on protected routes ensures authentication
+- Future: Team/school accounts with role-based access control (RBAC)
 
 ### **Data Migration:**
 - Free → Pro migration path for localStorage data

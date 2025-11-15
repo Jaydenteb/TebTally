@@ -88,6 +88,20 @@ const tools = [
     category: 'Classroom Management',
     icon: '📊',
   },
+  {
+    id: 'energy-dial',
+    title: 'Energy Dial',
+    description: 'Track and monitor classroom energy levels throughout the day.',
+    category: 'Classroom Management',
+    icon: '⚡',
+  },
+  {
+    id: 'dayboard',
+    title: 'Class Dayboard',
+    description: 'Display your daily class schedule with live progress tracking.',
+    category: 'Classroom Management',
+    icon: '📅',
+  },
 ];
 
 const categories = Array.from(new Set(tools.map(tool => tool.category)));

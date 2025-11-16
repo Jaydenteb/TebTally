@@ -58,27 +58,36 @@ export default function Page() {
             Comprehensive classroom management solutions designed for modern teachers
           </p>
         </div>
-        <div className="grid" style={{ gap: 24 }}>
+        <div className="grid" style={{ gap: 24, gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))' }}>
+          <AppCard
+            title="TebTally Pro"
+            href="#"
+            description="All TebTally features and tools enhanced with advanced analytics, unified dashboards, and premium integrations."
+            premium={true}
+            badge="Testing Beta"
+          />
           <AppCard
             title="SpellTally"
             href={links.spelltally}
             description="Weekly spelling practice and tests with teacher dashboards."
             premium={true}
-            badge="Popular"
+            badge="Testing Beta"
           />
           <AppCard
             title="WritingTally"
             href={links.writetally}
-            description="End-to-end writing assessments with rubrics and AI feedback."
+            description="End-to-end writing assessments with rubrics and AI feedback. (Coming Soon)"
             premium={true}
-            badge="AI-Powered"
+            badge="In Development"
+            disabled={true}
           />
           <AppCard
             title="TrackTally"
             href={links.tracktally}
-            description="Fast, offline-friendly behaviour incident logging for classrooms."
+            description="Fast, offline-friendly behaviour incident logging for classrooms. (Coming Soon)"
             premium={true}
-            badge="Offline First"
+            badge="Pending Approval"
+            disabled={true}
           />
         </div>
       </section>

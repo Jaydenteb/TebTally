@@ -39,54 +39,53 @@ export default function AppCard({ title, description, href, premium = false, bad
           }
         }}
       >
-          {badge && (
-            <div style={{
-              position: 'absolute',
-              top: 16,
-              right: 16,
-              background: 'linear-gradient(120deg, #33D0F5, #6D3CFF)',
-              color: 'white',
-              padding: '4px 12px',
-              borderRadius: '999px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-            }}>
-              {badge}
-            </div>
-          )}
-          <h3 style={{
-            fontSize: '1.5rem',
-            fontWeight: 700,
-            marginBottom: 12,
-            color: 'var(--text-base)',
+        {badge && (
+          <div style={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
+            background: 'linear-gradient(120deg, #33D0F5, #6D3CFF)',
+            color: 'white',
+            padding: '4px 12px',
+            borderRadius: '999px',
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            letterSpacing: '0.5px',
+            textTransform: 'uppercase',
           }}>
-            {title}
-          </h3>
-          <p style={{
-            fontSize: '1rem',
-            color: 'var(--text-muted)',
-            lineHeight: 1.6,
-            margin: 0,
+            {badge}
+          </div>
+        )}
+        <h3 style={{
+          fontSize: '1.5rem',
+          fontWeight: 700,
+          marginBottom: 12,
+          color: 'var(--text-base)',
+        }}>
+          {title}
+        </h3>
+        <p style={{
+          fontSize: '1rem',
+          color: 'var(--text-muted)',
+          lineHeight: 1.6,
+          margin: 0,
+        }}>
+          {description}
+        </p>
+        {!disabled && (
+          <div style={{
+            marginTop: 20,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            color: 'var(--primary-mid)',
+            fontWeight: 600,
+            fontSize: '0.9375rem',
           }}>
-            {description}
-          </p>
-          {!disabled && (
-            <div style={{
-              marginTop: 20,
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              color: 'var(--primary-mid)',
-              fontWeight: 600,
-              fontSize: '0.9375rem',
-            }}>
-              Learn More
-              <span style={{ fontSize: '1.25rem' }}>→</span>
-            </div>
-          )}
-        </div>
+            Learn More
+            <span style={{ fontSize: '1.25rem' }}>→</span>
+          </div>
+        )}
       </div>
     );
 

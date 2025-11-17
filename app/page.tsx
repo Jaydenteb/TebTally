@@ -6,6 +6,7 @@ import Link from "next/link"
 
 export default function Page() {
   const links = {
+    tebtallypro: process.env.NEXT_PUBLIC_TEBTALLYPRO_URL || 'http://localhost:3004',
     spelltally: process.env.NEXT_PUBLIC_SPELLTALLY_URL || 'http://localhost:3001',
     writetally: process.env.NEXT_PUBLIC_WRITETALLY_URL || 'http://localhost:3002',
     tracktally: process.env.NEXT_PUBLIC_TRACKTALLY_URL || 'http://localhost:3003',
@@ -61,7 +62,7 @@ export default function Page() {
         <div className="grid" style={{ gap: 24, gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))' }}>
           <AppCard
             title="TebTally Pro"
-            href="#"
+            href={links.tebtallypro}
             description="All TebTally features and tools enhanced with advanced analytics, unified dashboards, and premium integrations."
             premium={true}
             badge="Testing Beta"

@@ -4,8 +4,10 @@ export const metadata = {
 }
 
 import './globals.css'
+import { Analytics } from '@vercel/analytics/react'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const year = new Date().getFullYear();
   return (
     <html lang="en">
       <head>
@@ -44,12 +46,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="container">{children}</main>
         <footer className="footer">
           <div className="container">
-            <span>© {new Date().getFullYear()} TebTally</span>
+            <span>© {year} TebTally</span>
             <div style={{ marginTop: 6, fontSize: 12, color: '#42557a' }}>
-              ABN 96 110 054 130 • Jayden Tebble trading as TebTally
+              ABN 96 110 054 130 · TebTally
             </div>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   )

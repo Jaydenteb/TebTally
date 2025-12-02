@@ -160,8 +160,9 @@ export default function TimerPage() {
         <Card padding="large">
           <div style={{ textAlign: 'center' }}>
             <div
+              className="timer-display"
               style={{
-                fontSize: '5rem',
+                fontSize: 'clamp(2.5rem, 12vw, 5rem)',
                 fontWeight: 700,
                 color: isComplete ? '#10b981' : 'var(--text-main)',
                 marginBottom: 24,

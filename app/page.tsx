@@ -225,7 +225,7 @@ export default function Page() {
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <h2
             style={{
-              fontSize: "2.25rem",
+              fontSize: "clamp(1.5rem, 5vw, 2.25rem)",
               fontWeight: 700,
               margin: "0 0 12px",
               letterSpacing: "-0.02em",
@@ -237,8 +237,8 @@ export default function Page() {
           >
             Premium Apps
           </h2>
-          <p style={{ fontSize: "1.125rem", color: "var(--text-muted)", maxWidth: 600, margin: "0 auto" }}>
-            Browse the suite. Hover/click a card or use arrows; previews auto-rotate with a fade.
+          <p style={{ fontSize: "clamp(0.9375rem, 2.5vw, 1.125rem)", color: "var(--text-muted)", maxWidth: 600, margin: "0 auto", padding: "0 8px" }}>
+            Browse the suite. Tap a card or use arrows to preview.
           </p>
         </div>
 
@@ -326,17 +326,23 @@ export default function Page() {
             onClick={handlePrev}
             style={{
               position: "absolute",
-              left: 12,
+              left: 8,
               top: "50%",
               transform: "translateY(-50%)",
-              width: 36,
-              height: 36,
+              width: 44,
+              height: 44,
+              minWidth: 44,
+              minHeight: 44,
               borderRadius: "50%",
               border: "1px solid #e2e8f0",
               background: "#fff",
               boxShadow: "0 8px 16px -10px rgba(15,23,42,0.4)",
               cursor: "pointer",
               fontWeight: 700,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "1.125rem",
             }}
           >
             ←
@@ -371,17 +377,23 @@ export default function Page() {
             onClick={handleNext}
             style={{
               position: "absolute",
-              right: 12,
+              right: 8,
               top: "50%",
               transform: "translateY(-50%)",
-              width: 36,
-              height: 36,
+              width: 44,
+              height: 44,
+              minWidth: 44,
+              minHeight: 44,
               borderRadius: "50%",
               border: "1px solid #e2e8f0",
               background: "#fff",
               boxShadow: "0 8px 16px -10px rgba(15,23,42,0.4)",
               cursor: "pointer",
               fontWeight: 700,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "1.125rem",
             }}
           >
             →
@@ -390,8 +402,8 @@ export default function Page() {
       </section>
 
       <section id="tools" style={{ paddingTop: 48 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <h2 style={{ fontSize: "1.875rem", fontWeight: 600, margin: 0, letterSpacing: "-0.01em" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 12 }}>
+          <h2 style={{ fontSize: "clamp(1.25rem, 4vw, 1.875rem)", fontWeight: 600, margin: 0, letterSpacing: "-0.01em" }}>
             Free Teacher Tools
           </h2>
           <Link

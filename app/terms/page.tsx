@@ -1,6 +1,6 @@
-export const metadata = {
-  title: 'Terms of Service · TebTally',
-  description: 'Terms governing use of TebTally products.',
+﻿export const metadata = {
+  title: 'Terms of Service · TebTally™',
+  description: 'Terms governing use of TebTally™ products.',
 }
 
 import Link from 'next/link'
@@ -15,8 +15,8 @@ export default function TermsPage() {
 
       <section className="space-y-3 text-sm leading-6" style={{ color: '#334155' }}>
         <p>
-          TebTally (ABN 96 110 054 130) provides educational software including SpellTally, TrackTally,
-          TeamTally and WriteTally. By using any TebTally product you agree to comply with these terms and
+          TebTally™ (ABN 96 110 054 130) provides educational software including SpellTally™, TrackTally™,
+          and WritingTally™ (WriteTally). By using any TebTally™ product you agree to comply with these terms and
           applicable school policies.
         </p>
         <p>
@@ -29,16 +29,15 @@ export default function TermsPage() {
           constitutes acceptance of the updated terms. If you do not agree, discontinue use of the service.
         </p>
         <p>
-          For support or questions regarding these terms, contact
-          {' '}<a className="underline" href="mailto:support@tebtally.com" style={{ color: '#0ea5e9' }}>support@tebtally.com</a>.
+          For support or questions regarding these terms, contact{' '}
+          <a className="underline" href="mailto:support@tebtally.com" style={{ color: '#0ea5e9' }}>support@tebtally.com</a>.
         </p>
       </section>
       <div className="pt-4 text-sm">
         <Link className="font-medium" href="/" style={{ color: '#0ea5e9' }}>
-          ← Back to TebTally
+          ← Back to TebTally™
         </Link>
       </div>
     </main>
   )
 }
-

@@ -1,6 +1,11 @@
-export const metadata = {
-  title: 'TebTally',
-  description: 'The TebTally education apps hub',
+﻿export const metadata = {
+  title: 'TebTally™',
+  description: 'The TebTally™ education apps hub',
+  icons: {
+    icon: '/brand/tt.svg',
+    shortcut: ['/brand/tt.svg'],
+    apple: ['/brand/tt.svg'],
+  },
 }
 
 import './globals.css'
@@ -33,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 display: 'inline-block'
               }}
             >
-              TebTally
+              TebTally™
             </a>
             <nav className="flex items-center gap-4">
               <a href="/#apps" className="nav-link">Apps</a>
@@ -46,9 +51,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="container">{children}</main>
         <footer className="footer">
           <div className="container">
-            <span>© {year} TebTally</span>
+            <span>© {year} TebTally™</span>
             <div style={{ marginTop: 6, fontSize: 12, color: '#42557a' }}>
-              ABN 96 110 054 130 · TebTally
+              ABN 96 110 054 130 - TebTally™
             </div>
           </div>
         </footer>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { ReactNode } from 'react';
@@ -33,7 +33,7 @@ export default function ToolLayout({ children, title, description }: ToolLayoutP
       <footer className="tool-footer">
         <div className="container">
           <p className="text-small text-muted">
-            &copy; {new Date().getFullYear()} TebTally · <Link href="/privacy">Privacy</Link> · <Link href="/terms">Terms</Link>
+            © {new Date().getFullYear()} TebTally™ · <Link href="/privacy">Privacy</Link> · <Link href="/terms">Terms</Link>
           </p>
         </div>
       </footer>

@@ -1,6 +1,6 @@
-# TebTally Hub
+# TebTally™ Hub
 
-A minimal Next.js app that serves as the parent brand home for the TebTally suite (tebtally.com). It links to individual product apps (SpellTally, WritingTally, TrackTally) and is the natural place to add marketing pages, pricing, signup, and centralized identity (SSO) later.
+A minimal Next.js app that serves as the parent brand home for the TebTally™ suite (tebtally.com). It links to individual product apps (SpellTally™, WritingTally™, TrackTally™) and is the natural place to add marketing pages, pricing, signup, and centralized identity (SSO) later.
 
 ## Quick Start
 

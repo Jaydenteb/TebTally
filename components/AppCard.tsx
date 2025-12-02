@@ -1,5 +1,7 @@
+﻿import { ReactNode } from 'react'
+
 type Props = {
-  title: string
+  title: ReactNode
   description: string
   href: string
   premium?: boolean
@@ -12,7 +14,7 @@ export default function AppCard({ title, description, href, premium = false, bad
     const cardContent = (
       <div
         style={{
-          padding: '32px 28px',
+          padding: '24px 24px',
           background: 'linear-gradient(135deg, rgba(51, 208, 245, 0.03) 0%, rgba(109, 60, 255, 0.03) 100%)',
           border: '2px solid transparent',
           borderRadius: 'var(--radius-md)',
@@ -24,7 +26,10 @@ export default function AppCard({ title, description, href, premium = false, bad
           backgroundOrigin: 'border-box',
           backgroundClip: 'padding-box, border-box',
           height: '100%',
+          minHeight: 180,
           opacity: disabled ? 0.7 : 1,
+          display: 'flex',
+          flexDirection: 'column' as const,
         }}
         onMouseEnter={(e) => {
           if (!disabled) {
@@ -42,13 +47,13 @@ export default function AppCard({ title, description, href, premium = false, bad
         {badge && (
           <div style={{
             position: 'absolute',
-            top: 16,
-            right: 16,
+            top: 14,
+            right: 14,
             background: 'linear-gradient(120deg, #33D0F5, #6D3CFF)',
             color: 'white',
-            padding: '4px 12px',
+            padding: '4px 10px',
             borderRadius: '999px',
-            fontSize: '0.75rem',
+            fontSize: '0.7rem',
             fontWeight: 600,
             letterSpacing: '0.5px',
             textTransform: 'uppercase',
@@ -57,33 +62,35 @@ export default function AppCard({ title, description, href, premium = false, bad
           </div>
         )}
         <h3 style={{
-          fontSize: '1.5rem',
+          fontSize: '1.35rem',
           fontWeight: 700,
-          marginBottom: 12,
+          marginBottom: 10,
           color: 'var(--text-base)',
+          paddingRight: badge ? 90 : 0,
         }}>
           {title}
         </h3>
         <p style={{
-          fontSize: '1rem',
+          fontSize: '0.95rem',
           color: 'var(--text-muted)',
-          lineHeight: 1.6,
+          lineHeight: 1.55,
           margin: 0,
+          flex: 1,
         }}>
           {description}
         </p>
         {!disabled && (
           <div style={{
-            marginTop: 20,
+            marginTop: 16,
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
             color: 'var(--primary-mid)',
             fontWeight: 600,
-            fontSize: '0.9375rem',
+            fontSize: '0.875rem',
           }}>
             Learn More
-            <span style={{ fontSize: '1.25rem' }}>→</span>
+            <span style={{ fontSize: '1.125rem' }}>→</span>
           </div>
         )}
       </div>

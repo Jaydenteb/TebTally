@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ToolCard from '@/components/tools/ToolCard';
 
 export const metadata: Metadata = {
-  title: 'Free Teacher Tools | TebTally',
+  title: 'Free Teacher Tools | TebTally™',
   description: 'Free classroom tools for teachers including timers, random selectors, seating organisers, and more.',
 };
 

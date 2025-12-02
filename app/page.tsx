@@ -9,9 +9,12 @@ import proPreview from "../Images/Hero image.png";
 import spellPreview from "../Images/Spellt.png";
 import writingPreview from "../Images/Writing.png";
 import trackPreview from "../Images/logger.png";
+import housePreview from "../Images/House.png";
+import classPreview from "../Images/Class.png";
+import checkPreview from "../Images/Check.png";
 
 type AppPreview = {
-  id: "tebtallypro" | "spelltally" | "writingtally" | "tracktally";
+  id: "tebtallypro" | "spelltally" | "writingtally" | "tracktally" | "housetally" | "classtally" | "checktally";
   title: string;
   description: string;
   href: string;
@@ -67,6 +70,36 @@ export default function Page() {
       disabled: true,
       image: trackPreview,
       alt: "TrackTally™ dashboard preview",
+    },
+    {
+      id: "housetally",
+      title: "HouseTally™",
+      description: "House points tracking and live leaderboards for day-to-day school culture.",
+      href: "#",
+      badge: "In Development",
+      disabled: true,
+      image: housePreview,
+      alt: "HouseTally™ dashboard preview",
+    },
+    {
+      id: "classtally",
+      title: "ClassTally™",
+      description: "Class placement tool that builds next year's class lists based on academic, behaviour, ILP/EAL data plus relationships (friends, incompatibles, essential pairs).",
+      href: "#",
+      badge: "In Development",
+      disabled: true,
+      image: classPreview,
+      alt: "ClassTally™ dashboard preview",
+    },
+    {
+      id: "checktally",
+      title: "CheckTally™",
+      description: "Formative assessment app for teachers - quickly track student skills during classroom observations.",
+      href: "#",
+      badge: "In Development",
+      disabled: true,
+      image: checkPreview,
+      alt: "CheckTally™ dashboard preview",
     },
   ];
 
@@ -211,7 +244,7 @@ export default function Page() {
 
         <div
           className="grid"
-          style={{ gap: 24, gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", marginBottom: 24 }}
+          style={{ gap: 20, gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", marginBottom: 24 }}
         >
           {appPreviews.map((app) => {
             return (

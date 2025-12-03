@@ -36,9 +36,9 @@ export default function Page() {
     {
       id: "tebtallypro",
       title: "TebTally™ Pro",
-      description: "All TebTally™ features and tools enhanced with analytics, unified dashboards, and integrations.",
+      description: "All TebTally™ features and tools enhanced with analytics, unified dashboards, and integrations. 14-day free trial, then $5/month.",
       href: links.tebtallypro,
-      badge: "Testing Beta",
+      badge: "Live",
       image: proPreview,
       alt: "TebTally™ Pro dashboard preview",
     },

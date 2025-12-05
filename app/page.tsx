@@ -7,14 +7,13 @@ import Image from "next/image";
 
 import proPreview from "../Images/Hero image.png";
 import spellPreview from "../Images/Spellt.png";
-import writingPreview from "../Images/Writing.png";
 import trackPreview from "../Images/logger.png";
 import housePreview from "../Images/House.png";
 import classPreview from "../Images/Class.png";
 import checkPreview from "../Images/Check.png";
 
 type AppPreview = {
-  id: "tebtallypro" | "spelltally" | "writingtally" | "tracktally" | "housetally" | "classtally" | "checktally";
+  id: "tebtallypro" | "spelltally" | "tracktally" | "housetally" | "classtally" | "checktally";
   title: string;
   description: string;
   href: string;
@@ -28,7 +27,6 @@ export default function Page() {
   const links = {
     tebtallypro: process.env.NEXT_PUBLIC_TEBTALLYPRO_URL || "http://localhost:3004",
     spelltally: process.env.NEXT_PUBLIC_SPELLTALLY_URL || "http://localhost:3001",
-    writetally: process.env.NEXT_PUBLIC_WRITETALLY_URL || "http://localhost:3002",
     tracktally: process.env.NEXT_PUBLIC_TRACKTALLY_URL || "http://localhost:3003",
   };
 
@@ -50,16 +48,6 @@ export default function Page() {
       badge: "Live",
       image: spellPreview,
       alt: "SpellTally™ dashboard preview",
-    },
-    {
-      id: "writingtally",
-      title: "WritingTally™",
-      description: "End-to-end writing assessments with rubrics and AI feedback. (Coming Soon)",
-      href: links.writetally,
-      badge: "In Development",
-      disabled: true,
-      image: writingPreview,
-      alt: "WritingTally™ dashboard preview",
     },
     {
       id: "tracktally",
@@ -94,7 +82,7 @@ export default function Page() {
     {
       id: "checktally",
       title: "CheckTally™",
-      description: "Formative assessment app for teachers - quickly track student skills during classroom observations.",
+      description: "Formative assessment app for teachers - quickly track student skills during classroom observations. $7/month for teachers.",
       href: "#",
       badge: "In Development",
       disabled: true,

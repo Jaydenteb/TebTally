@@ -10,7 +10,7 @@ export default function PricingPage() {
     <main className="mx-auto max-w-4xl space-y-10 px-6 py-16">
       <header>
         <h1 className="text-3xl font-semibold" style={{ color: '#0b1220' }}>Pricing</h1>
-        <p className="mt-2 text-sm" style={{ color: '#42557a' }}>TebTally™ Pricing (2025)</p>
+        <p className="mt-2 text-sm" style={{ color: '#42557a' }}>TebTally™ Pricing (2026)</p>
       </header>
 
       {/* Teacher Subscriptions */}
@@ -86,7 +86,7 @@ export default function PricingPage() {
                       borderRadius: '999px',
                       fontSize: '0.6875rem',
                       fontWeight: 600
-                    }}>2025</span>
+                    }}>2026</span>
                   </span>
                 </th>
               </tr>

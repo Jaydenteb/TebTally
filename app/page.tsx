@@ -43,7 +43,7 @@ export default function Page() {
     {
       id: "spelltally",
       title: "SpellTally™",
-      description: "Weekly spelling practice and tests with teacher dashboards. Try free for 30 days. $7/month or $69/year for schools.",
+      description: "Weekly spelling practice and tests with teacher dashboards. Try free for 30 days. $7/month.",
       href: links.spelltally,
       badge: "Live",
       image: spellPreview,

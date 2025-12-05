@@ -95,12 +95,22 @@ export default function PricingPage() {
               <tr>
                 <td style={{ padding: '14px 20px', fontSize: '0.9375rem', color: '#334155', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>SpellTally™</td>
                 <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.9375rem', color: '#42557a', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>$349</td>
-                <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.9375rem', fontWeight: 600, color: '#0b1220', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>$175</td>
+                <td style={{ padding: '14px 20px', textAlign: 'right', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>
+                  <span style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0b1220' }}>$175</span>
+                  <span style={{ display: 'block', fontSize: '0.75rem', color: '#42557a', marginTop: 2 }}>
+                    Use code: <code style={{ background: '#f6f8fc', padding: '2px 6px', borderRadius: '4px', fontFamily: 'monospace', fontWeight: 600, color: '#6D3CFF' }}>FOUNDERST</code>
+                  </span>
+                </td>
               </tr>
               <tr>
                 <td style={{ padding: '14px 20px', fontSize: '0.9375rem', color: '#334155' }}>CheckTally™</td>
                 <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.9375rem', color: '#42557a' }}>$349</td>
-                <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.9375rem', fontWeight: 600, color: '#0b1220' }}>$175</td>
+                <td style={{ padding: '14px 20px', textAlign: 'right' }}>
+                  <span style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0b1220' }}>$175</span>
+                  <span style={{ display: 'block', fontSize: '0.75rem', color: '#42557a', marginTop: 2 }}>
+                    Use code: <code style={{ background: '#f6f8fc', padding: '2px 6px', borderRadius: '4px', fontFamily: 'monospace', fontWeight: 600, color: '#6D3CFF' }}>FOUNDERCT</code>
+                  </span>
+                </td>
               </tr>
             </tbody>
           </table>

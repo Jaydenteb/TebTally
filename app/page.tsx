@@ -264,7 +264,7 @@ export default function HomePage() {
                         background: "var(--surface-subtle)",
                         border: activeApp === idx ? "2px solid var(--primary-mid)" : "1px solid var(--border-muted)",
                         transform: activeApp === idx ? "scale(1.05)" : "scale(1)",
-                        boxShadow: activeApp === idx ? "0 8px 25px rgba(109, 60, 255, 0.15)" : "none",
+                        boxShadow: activeApp === idx ? "var(--shadow-card)" : "none",
                         zIndex: activeApp === idx ? 10 : 1,
                         cursor: isLive ? "pointer" : "default",
                       }}

@@ -13,10 +13,13 @@
   --surface-base: #ffffff;
   --surface-muted: #f6f8fc;
   --surface-subtle: #eef3fb;
-  --border-muted: rgba(58, 76, 130, 0.22);
+  --border-muted: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --border-focus: #cbd5e1;
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
   --shadow-md: 0 6px 20px rgba(24, 34, 72, 0.12);
   --shadow-lg: 0 16px 40px rgba(24, 34, 72, 0.16);
+  --shadow-card: 0 8px 24px rgba(16, 23, 58, 0.12);
   --radius-xs: 6px;
   --radius-sm: 10px;
   --radius-md: 14px;
@@ -26,7 +29,7 @@
   --transition-fast: 150ms var(--ease-standard);
   --background: var(--surface-subtle);
   --foreground: var(--text-main);
-  --app-background: radial-gradient(circle at top left, rgba(109, 60, 255, 0.12) 0%, rgba(51, 208, 245, 0.15) 40%, rgba(255, 255, 255, 0.6) 100%);
+  --app-background: var(--surface-subtle);
 }
 
 @theme inline {
@@ -70,6 +73,30 @@ body {
 
 .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
 .header { position: sticky; top: 0; z-index: 10; }
+
+/* Glass panel effect for header */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Brand pill badge style */
+.brand-pill {
+  border-radius: 999px;
+  background: linear-gradient(120deg, rgba(51, 208, 245, 0.18), rgba(109, 60, 255, 0.18));
+  color: var(--primary-dark);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 .brand-text:hover {
   opacity: 0.85;

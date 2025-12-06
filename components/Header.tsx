@@ -36,7 +36,7 @@ export default function Header() {
   }, [mobileNavOpen]);
 
   return (
-    <header className="relative border-b border-slate-200/60 bg-[radial-gradient(circle_at_top,_#f6f8fc_0%,_rgba(255,255,255,0.6)_55%,_rgba(255,255,255,0)_100%)]">
+    <header className="glass-panel">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
         <a
           href="/"

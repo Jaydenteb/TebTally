@@ -181,7 +181,7 @@ export default function HomePage() {
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
-              href="#apps"
+              href="#features"
               className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:opacity-90"
               style={{
                 background: "linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end))",
@@ -343,6 +343,13 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+
+              {/* Pricing link */}
+              <div className="mt-6 text-center">
+                <Link href="/pricing" className="inline-flex items-center gap-2 text-sm hover:underline" style={{ color: "var(--primary-mid)" }}>
+                  View detailed pricing →
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -390,72 +397,6 @@ export default function HomePage() {
                 <p style={{ color: "var(--text-muted)" }}>{feature.description}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Apps Section */}
-      <section id="apps" className="px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold sm:text-4xl" style={{ color: "var(--text-main)" }}>
-              The TebTally Suite
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg" style={{ color: "var(--text-muted)" }}>
-              Each app tackles a specific classroom challenge. Use one or use them all.
-            </p>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {apps.map((app) => (
-              <a
-                key={app.id}
-                href={app.disabled ? undefined : app.href}
-                className="group overflow-hidden rounded-3xl transition hover:shadow-lg"
-                style={{
-                  background: "var(--surface-base)",
-                  border: "1px solid var(--border-muted)",
-                  pointerEvents: app.disabled ? "none" : "auto",
-                  opacity: app.disabled ? 0.7 : 1,
-                }}
-              >
-                <div className="relative aspect-video w-full overflow-hidden" style={{ background: "var(--surface-muted)" }}>
-                  <Image src={app.image} alt={app.name} className="h-full w-full object-cover" />
-                  <div className="absolute right-3 top-3">
-                    <span
-                      className="rounded-full px-3 py-1 text-xs font-semibold uppercase text-white"
-                      style={{
-                        background: app.badge === "Live" ? "#10b981" : "#64748b",
-                      }}
-                    >
-                      {app.badge}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="mb-2 flex items-center justify-between">
-                    <h3 className="text-lg font-semibold" style={{ color: "var(--text-main)" }}>
-                      {app.name}
-                    </h3>
-                    <span className="text-sm font-semibold" style={{ color: "var(--primary-mid)" }}>
-                      {app.price}
-                    </span>
-                  </div>
-                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                    {app.shortDescription}
-                  </p>
-                  {app.trial && (
-                    <p className="mt-2 text-xs font-medium" style={{ color: "var(--primary-mid)" }}>
-                      {app.trial}
-                    </p>
-                  )}
-                </div>
-              </a>
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            <Link href="/pricing" className="inline-flex items-center gap-2 hover:underline" style={{ color: "var(--primary-mid)" }}>
-              View detailed pricing →
-            </Link>
           </div>
         </div>
       </section>
@@ -546,7 +487,7 @@ export default function HomePage() {
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
-              href="#apps"
+              href="#features"
               className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:opacity-90"
               style={{
                 background: "linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end))",

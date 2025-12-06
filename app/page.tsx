@@ -82,7 +82,7 @@ const apps = [
     price: "$7/mo",
     trial: "30-day trial",
     image: spellPreview,
-    href: "https://spell.tebtally.com",
+    href: "https://spelltally.com",
   },
   {
     id: "checktally",

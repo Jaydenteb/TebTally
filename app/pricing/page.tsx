@@ -31,20 +31,30 @@ export default function PricingPage() {
               <tr style={{ background: '#f6f8fc' }}>
                 <th style={{ padding: '14px 20px', textAlign: 'left', fontSize: '0.875rem', fontWeight: 600, color: '#0b1220', borderBottom: '1px solid rgba(58, 76, 130, 0.22)' }}>App</th>
                 <th style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.875rem', fontWeight: 600, color: '#0b1220', borderBottom: '1px solid rgba(58, 76, 130, 0.22)' }}>Price</th>
+                <th style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.875rem', fontWeight: 600, color: '#0b1220', borderBottom: '1px solid rgba(58, 76, 130, 0.22)' }}></th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td style={{ padding: '14px 20px', fontSize: '0.9375rem', color: '#334155', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>SpellTally™</td>
                 <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.9375rem', fontWeight: 600, color: '#0b1220', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>$7</td>
+                <td style={{ padding: '14px 20px', textAlign: 'right', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>
+                  <a href="https://spelltally.com/register" target="_blank" rel="noopener noreferrer" style={{ color: '#5a62ff', fontWeight: 500, fontSize: '0.875rem', textDecoration: 'none' }}>Start Trial →</a>
+                </td>
               </tr>
               <tr>
                 <td style={{ padding: '14px 20px', fontSize: '0.9375rem', color: '#334155', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>TebTally™ Pro</td>
                 <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.9375rem', fontWeight: 600, color: '#0b1220', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>$5</td>
+                <td style={{ padding: '14px 20px', textAlign: 'right', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>
+                  <a href="https://pro.tebtally.com/login" target="_blank" rel="noopener noreferrer" style={{ color: '#5a62ff', fontWeight: 500, fontSize: '0.875rem', textDecoration: 'none' }}>Start Trial →</a>
+                </td>
               </tr>
               <tr>
                 <td style={{ padding: '14px 20px', fontSize: '0.9375rem', color: '#334155', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>CheckTally™</td>
                 <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.9375rem', fontWeight: 600, color: '#0b1220', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>$7</td>
+                <td style={{ padding: '14px 20px', textAlign: 'right', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>
+                  <a href="https://check.tebtally.com/login" target="_blank" rel="noopener noreferrer" style={{ color: '#5a62ff', fontWeight: 500, fontSize: '0.875rem', textDecoration: 'none' }}>Start Trial →</a>
+                </td>
               </tr>
               <tr style={{ background: 'linear-gradient(135deg, rgba(51, 208, 245, 0.05) 0%, rgba(109, 60, 255, 0.05) 100%)' }}>
                 <td style={{ padding: '14px 20px', fontSize: '0.9375rem', fontWeight: 600, color: '#0b1220' }}>
@@ -52,6 +62,7 @@ export default function PricingPage() {
                   <span style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 400, color: '#42557a', marginTop: 2 }}>All three apps</span>
                 </td>
                 <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '1.125rem', fontWeight: 700, background: 'linear-gradient(120deg, #33D0F5, #6D3CFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>$15</td>
+                <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.75rem', color: '#42557a' }}>Coming soon</td>
               </tr>
             </tbody>
           </table>
@@ -89,6 +100,7 @@ export default function PricingPage() {
                     }}>2026</span>
                   </span>
                 </th>
+                <th style={{ padding: '14px 20px', textAlign: 'right', fontSize: '0.875rem', fontWeight: 600, color: '#0b1220', borderBottom: '1px solid rgba(58, 76, 130, 0.22)' }}></th>
               </tr>
             </thead>
             <tbody>
@@ -101,6 +113,9 @@ export default function PricingPage() {
                     Use code: <code style={{ background: '#f6f8fc', padding: '2px 6px', borderRadius: '4px', fontFamily: 'monospace', fontWeight: 600, color: '#6D3CFF' }}>FOUNDERST</code>
                   </span>
                 </td>
+                <td style={{ padding: '14px 20px', textAlign: 'right', borderBottom: '1px solid rgba(58, 76, 130, 0.12)' }}>
+                  <Link href="/contact" style={{ color: '#5a62ff', fontWeight: 500, fontSize: '0.875rem', textDecoration: 'none' }}>Contact Us →</Link>
+                </td>
               </tr>
               <tr>
                 <td style={{ padding: '14px 20px', fontSize: '0.9375rem', color: '#334155' }}>CheckTally™</td>
@@ -110,6 +125,9 @@ export default function PricingPage() {
                   <span style={{ display: 'block', fontSize: '0.75rem', color: '#42557a', marginTop: 2 }}>
                     Use code: <code style={{ background: '#f6f8fc', padding: '2px 6px', borderRadius: '4px', fontFamily: 'monospace', fontWeight: 600, color: '#6D3CFF' }}>FOUNDERCT</code>
                   </span>
+                </td>
+                <td style={{ padding: '14px 20px', textAlign: 'right' }}>
+                  <Link href="/contact" style={{ color: '#5a62ff', fontWeight: 500, fontSize: '0.875rem', textDecoration: 'none' }}>Contact Us →</Link>
                 </td>
               </tr>
             </tbody>

@@ -134,9 +134,6 @@ export default function PricingPage() {
           </table>
         </div>
 
-        <p className="text-sm" style={{ color: '#42557a', fontStyle: 'italic' }}>
-          * Flexible pricing available for schools — <a href="mailto:hello@tebtally.com" style={{ color: '#0ea5e9', textDecoration: 'underline' }}>get in touch</a>
-        </p>
       </section>
 
       {/* Coming Soon */}

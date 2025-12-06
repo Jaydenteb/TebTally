@@ -510,46 +510,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer
-        className="px-4 py-12 sm:px-6"
-        style={{ background: "var(--surface-base)", borderTop: "1px solid var(--border-muted)" }}
-      >
-        <div className="mx-auto max-w-6xl">
-          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <div className="flex items-center gap-2">
-              <div
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold text-white"
-                style={{
-                  background: "linear-gradient(120deg, var(--primary-gradient-start), var(--primary-gradient-end))",
-                }}
-              >
-                TT
-              </div>
-              <span className="font-semibold" style={{ color: "var(--text-main)" }}>
-                TebTally
-              </span>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-6 text-sm" style={{ color: "var(--text-muted)" }}>
-              <Link href="/pricing" className="transition hover:opacity-80">
-                Pricing
-              </Link>
-              <Link href="/privacy" className="transition hover:opacity-80">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="transition hover:opacity-80">
-                Terms of Service
-              </Link>
-              <Link href="/contact" className="transition hover:opacity-80">
-                Contact Us
-              </Link>
-            </div>
-          </div>
-          <div className="mt-8 text-center text-sm" style={{ color: "var(--text-muted)" }}>
-            © {new Date().getFullYear()} TebTally. Made with love in Australia.
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

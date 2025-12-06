@@ -34,10 +34,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main className="container">{children}</main>
         <footer className="footer">
-          <div className="container">
-            <span>© {year} TebTally™</span>
-            <div style={{ marginTop: 6, fontSize: 12, color: '#42557a' }}>
-              ABN 96 110 054 130 - TebTally™
+          <div className="footer-content">
+            <div className="footer-links">
+              <a href="/pricing">Pricing</a>
+              <a href="/privacy">Privacy Policy</a>
+              <a href="/terms">Terms of Service</a>
+              <a href="/contact">Contact Us</a>
+            </div>
+            <div className="footer-copyright">
+              © {year} TebTally™ · Made with love in Australia
+            </div>
+            <div className="footer-abn">
+              ABN 96 110 054 130
             </div>
           </div>
         </footer>

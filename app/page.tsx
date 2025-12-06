@@ -9,9 +9,9 @@ import {
   LayoutDashboard,
   Zap,
   Shield,
-  Smartphone,
+  Gift,
   Users,
-  TrendingUp,
+  Building,
 } from "lucide-react";
 
 import proPreview from "../Images/Hero image.png";
@@ -27,6 +27,7 @@ const features = [
     title: "Unified Dashboard",
     description:
       "Access all your TebTally apps from one central hub. Manage subscriptions, classes, and settings in one place.",
+    comingSoon: true,
   },
   {
     icon: Zap,
@@ -41,10 +42,10 @@ const features = [
       "Australian-hosted data, minimal collection, and school-safe security. Your students' privacy is protected.",
   },
   {
-    icon: Smartphone,
-    title: "Works Everywhere",
+    icon: Gift,
+    title: "Free Tools Included",
     description:
-      "Desktop, tablet, or phone. Online or offline. Your classroom tools go wherever you do.",
+      "Timers, name pickers, and classroom tools at no cost. Use them without signing up.",
   },
   {
     icon: Users,
@@ -53,10 +54,10 @@ const features = [
       "Designed by an Australian primary teacher who understands the daily realities of classroom management.",
   },
   {
-    icon: TrendingUp,
-    title: "Growing Suite",
+    icon: Building,
+    title: "School Subscriptions",
     description:
-      "New apps launching regularly. Your subscription grows more valuable as we add more tools.",
+      "Volume pricing available for whole-school rollouts. Contact us for founding school rates.",
   },
 ];
 
@@ -64,7 +65,8 @@ const apps = [
   {
     id: "tebtallypro",
     name: "TebTally Pro",
-    description: "All classroom tools in one workspace with analytics and unified dashboards.",
+    shortDescription: "All classroom tools in one workspace.",
+    fullDescription: "TebTally Pro combines all your classroom management tools into one powerful workspace. Access enhanced versions of timers, name pickers, and classroom tools with analytics dashboards to track usage patterns. Perfect for teachers who want everything in one place with data insights.",
     badge: "Live",
     price: "$5/mo",
     trial: "14-day trial",
@@ -74,7 +76,8 @@ const apps = [
   {
     id: "spelltally",
     name: "SpellTally",
-    description: "Weekly spelling practice and tests with teacher dashboards.",
+    shortDescription: "Weekly spelling tests made simple.",
+    fullDescription: "SpellTally streamlines your weekly spelling routine. Create custom word lists, assign them to students, and let them practice throughout the week. Students hear words read aloud and type their answers. Teachers get instant results with class-wide analytics showing who needs extra support.",
     badge: "Live",
     price: "$7/mo",
     trial: "30-day trial",
@@ -84,7 +87,8 @@ const apps = [
   {
     id: "checktally",
     name: "CheckTally",
-    description: "Track student skills during classroom observations.",
+    shortDescription: "Track student skills as you teach.",
+    fullDescription: "CheckTally is a formative assessment tool for busy teachers. Create skill checklists aligned to curriculum outcomes, then quickly mark off student progress during lessons, reading groups, or observations. Build a picture of each student's growth over time without paperwork piling up.",
     badge: "Live",
     price: "$7/mo",
     trial: "30-day trial",
@@ -94,7 +98,8 @@ const apps = [
   {
     id: "tracktally",
     name: "TrackTally",
-    description: "Fast, offline-friendly behaviour incident logging.",
+    shortDescription: "Offline behaviour incident logging.",
+    fullDescription: "TrackTally helps you document behaviour incidents quickly and consistently. Works offline so you can log events even without internet, then syncs when you're back online. Generate reports for parent meetings, welfare teams, or admin with just a few taps.",
     badge: "Pending",
     price: "Soon",
     image: trackPreview,
@@ -104,7 +109,8 @@ const apps = [
   {
     id: "housetally",
     name: "HouseTally",
-    description: "House points tracking and live leaderboards.",
+    shortDescription: "House points and live leaderboards.",
+    fullDescription: "HouseTally brings house point tracking into the digital age. Award points from any device, display live leaderboards on classroom screens, and let students see their house's progress in real-time. Perfect for building school culture and friendly competition.",
     badge: "In Dev",
     price: "TBA",
     image: housePreview,
@@ -114,7 +120,8 @@ const apps = [
   {
     id: "classtally",
     name: "ClassTally",
-    description: "Smart class placement for next year based on student data.",
+    shortDescription: "Smart class placement for next year.",
+    fullDescription: "ClassTally takes the stress out of class placement. Input student data including academic levels, behaviour notes, ILP/EAL status, and social relationships (friends, incompatibles, essential pairs). The algorithm builds balanced class lists that respect all your constraints.",
     badge: "In Dev",
     price: "TBA",
     image: classPreview,
@@ -125,13 +132,13 @@ const apps = [
 
 const benefits = [
   "Australian Curriculum aligned",
-  "Works offline when you need it",
-  "Google Classroom integration",
-  "No student contact info required",
+  "No student emails or contact info required",
   "Export your data anytime",
   "Free classroom tools included",
-  "14-30 day free trials",
+  "14-30 day free trials on all apps",
   "Cancel subscriptions anytime",
+  "Australian made and hosted",
+  "Responsive support from real teachers",
 ];
 
 export default function HomePage() {
@@ -244,18 +251,20 @@ export default function HomePage() {
                   <button
                     key={app.id}
                     onClick={() => setActiveApp(idx)}
-                    className="relative overflow-hidden rounded-2xl text-left transition-all"
+                    className="relative overflow-hidden rounded-2xl text-left transition-all duration-200"
                     style={{
                       background: "var(--surface-subtle)",
                       border: activeApp === idx ? "2px solid var(--primary-mid)" : "1px solid var(--border-muted)",
-                      transform: activeApp === idx ? "scale(1.02)" : "scale(1)",
+                      transform: activeApp === idx ? "scale(1.05)" : "scale(1)",
+                      boxShadow: activeApp === idx ? "0 8px 25px rgba(109, 60, 255, 0.15)" : "none",
+                      zIndex: activeApp === idx ? 10 : 1,
                     }}
                   >
                     <div className="aspect-video w-full overflow-hidden">
                       <Image
                         src={app.image}
                         alt={app.name}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover transition-opacity duration-200"
                         style={{ opacity: activeApp === idx ? 1 : 0.5 }}
                       />
                     </div>
@@ -275,16 +284,65 @@ export default function HomePage() {
                         </span>
                       </div>
                       <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                        {app.description}
+                        {app.shortDescription}
                       </p>
                     </div>
                   </button>
                 ))}
               </div>
 
-              <p className="mt-6 text-center text-sm" style={{ color: "var(--text-muted)" }}>
-                One hub. Multiple focused apps. All your classroom tools connected.
-              </p>
+              {/* Selected app description */}
+              <div
+                className="mt-6 rounded-2xl p-4 transition-all duration-300"
+                style={{
+                  background: "linear-gradient(135deg, rgba(51, 208, 245, 0.08) 0%, rgba(109, 60, 255, 0.08) 100%)",
+                  border: "1px solid rgba(109, 60, 255, 0.15)",
+                }}
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white"
+                    style={{
+                      background: "linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end))",
+                    }}
+                  >
+                    {apps[activeApp].name.charAt(0)}
+                  </div>
+                  <div className="flex-1">
+                    <div className="mb-1 flex items-center gap-2">
+                      <h4 className="font-semibold" style={{ color: "var(--text-main)" }}>
+                        {apps[activeApp].name}
+                      </h4>
+                      <span
+                        className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase"
+                        style={{
+                          background: apps[activeApp].badge === "Live" ? "rgba(16, 185, 129, 0.1)" : "rgba(100, 116, 139, 0.1)",
+                          color: apps[activeApp].badge === "Live" ? "#10b981" : "#64748b",
+                        }}
+                      >
+                        {apps[activeApp].badge}
+                      </span>
+                      {apps[activeApp].price && (
+                        <span className="text-sm font-medium" style={{ color: "var(--primary-mid)" }}>
+                          {apps[activeApp].price}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                      {apps[activeApp].fullDescription}
+                    </p>
+                    {!apps[activeApp].disabled && (
+                      <a
+                        href={apps[activeApp].href}
+                        className="mt-3 inline-flex items-center gap-1 text-sm font-medium transition hover:gap-2"
+                        style={{ color: "var(--primary-mid)" }}
+                      >
+                        Try {apps[activeApp].name} →
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -316,9 +374,19 @@ export default function HomePage() {
                 >
                   <feature.icon className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold" style={{ color: "var(--text-main)" }}>
-                  {feature.title}
-                </h3>
+                <div className="mb-2 flex items-center gap-2">
+                  <h3 className="text-xl font-semibold" style={{ color: "var(--text-main)" }}>
+                    {feature.title}
+                  </h3>
+                  {feature.comingSoon && (
+                    <span
+                      className="rounded-full px-2 py-0.5 text-xs font-semibold uppercase"
+                      style={{ background: "rgba(109, 60, 255, 0.15)", color: "var(--primary-mid)" }}
+                    >
+                      Coming Soon
+                    </span>
+                  )}
+                </div>
                 <p style={{ color: "var(--text-muted)" }}>{feature.description}</p>
               </div>
             ))}
@@ -373,7 +441,7 @@ export default function HomePage() {
                     </span>
                   </div>
                   <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                    {app.description}
+                    {app.shortDescription}
                   </p>
                   {app.trial && (
                     <p className="mt-2 text-xs font-medium" style={{ color: "var(--primary-mid)" }}>

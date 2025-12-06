@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --primary-gradient-start: #33d0f5;
   --primary-gradient-end: #6d3cff;
@@ -25,6 +27,20 @@
   --background: var(--surface-subtle);
   --foreground: var(--text-main);
   --app-background: radial-gradient(circle at top left, rgba(109, 60, 255, 0.12) 0%, rgba(51, 208, 245, 0.15) 40%, rgba(255, 255, 255, 0.6) 100%);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary-start: var(--primary-gradient-start);
+  --color-primary-end: var(--primary-gradient-end);
+  --color-primary-mid: var(--primary-mid);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-surface-base: var(--surface-base);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-border-muted: var(--border-muted);
 }
 
 * { box-sizing: border-box; }

@@ -1,9 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import AppCard from "../components/AppCard";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import {
+  Sparkles,
+  Check,
+  LayoutDashboard,
+  Zap,
+  Shield,
+  Smartphone,
+  Users,
+  TrendingUp,
+} from "lucide-react";
 
 import proPreview from "../Images/Hero image.png";
 import spellPreview from "../Images/Spellt.png";
@@ -12,490 +21,526 @@ import housePreview from "../Images/House.png";
 import classPreview from "../Images/Class.png";
 import checkPreview from "../Images/Check.png";
 
-type AppPreview = {
-  id: "tebtallypro" | "spelltally" | "tracktally" | "housetally" | "classtally" | "checktally";
-  title: string;
-  description: string;
-  href: string;
-  badge: string;
-  disabled?: boolean;
-  image?: any;
-  alt?: string;
-};
+const features = [
+  {
+    icon: LayoutDashboard,
+    title: "Unified Dashboard",
+    description:
+      "Access all your TebTally apps from one central hub. Manage subscriptions, classes, and settings in one place.",
+  },
+  {
+    icon: Zap,
+    title: "Purpose-Built Tools",
+    description:
+      "Each app solves a specific classroom challenge. No bloat, just focused solutions that work.",
+  },
+  {
+    icon: Shield,
+    title: "Privacy First",
+    description:
+      "Australian-hosted data, minimal collection, and school-safe security. Your students' privacy is protected.",
+  },
+  {
+    icon: Smartphone,
+    title: "Works Everywhere",
+    description:
+      "Desktop, tablet, or phone. Online or offline. Your classroom tools go wherever you do.",
+  },
+  {
+    icon: Users,
+    title: "Built by Teachers",
+    description:
+      "Designed by an Australian primary teacher who understands the daily realities of classroom management.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Growing Suite",
+    description:
+      "New apps launching regularly. Your subscription grows more valuable as we add more tools.",
+  },
+];
 
-export default function Page() {
-  const links = {
-    tebtallypro: process.env.NEXT_PUBLIC_TEBTALLYPRO_URL || "http://localhost:3004",
-    spelltally: process.env.NEXT_PUBLIC_SPELLTALLY_URL || "http://localhost:3001",
-    tracktally: process.env.NEXT_PUBLIC_TRACKTALLY_URL || "http://localhost:3003",
-  };
+const apps = [
+  {
+    id: "tebtallypro",
+    name: "TebTally Pro",
+    description: "All classroom tools in one workspace with analytics and unified dashboards.",
+    badge: "Live",
+    price: "$5/mo",
+    trial: "14-day trial",
+    image: proPreview,
+    href: "https://pro.tebtally.com",
+  },
+  {
+    id: "spelltally",
+    name: "SpellTally",
+    description: "Weekly spelling practice and tests with teacher dashboards.",
+    badge: "Live",
+    price: "$7/mo",
+    trial: "30-day trial",
+    image: spellPreview,
+    href: "https://spell.tebtally.com",
+  },
+  {
+    id: "checktally",
+    name: "CheckTally",
+    description: "Track student skills during classroom observations.",
+    badge: "Live",
+    price: "$7/mo",
+    trial: "30-day trial",
+    image: checkPreview,
+    href: "https://check.tebtally.com",
+  },
+  {
+    id: "tracktally",
+    name: "TrackTally",
+    description: "Fast, offline-friendly behaviour incident logging.",
+    badge: "Pending",
+    price: "Soon",
+    image: trackPreview,
+    href: "#",
+    disabled: true,
+  },
+  {
+    id: "housetally",
+    name: "HouseTally",
+    description: "House points tracking and live leaderboards.",
+    badge: "In Dev",
+    price: "TBA",
+    image: housePreview,
+    href: "#",
+    disabled: true,
+  },
+  {
+    id: "classtally",
+    name: "ClassTally",
+    description: "Smart class placement for next year based on student data.",
+    badge: "In Dev",
+    price: "TBA",
+    image: classPreview,
+    href: "#",
+    disabled: true,
+  },
+];
 
-  const appPreviews: AppPreview[] = [
-    {
-      id: "tebtallypro",
-      title: "TebTally™ Pro",
-      description: "All TebTally™ features and tools enhanced with analytics, unified dashboards, and integrations. 14-day free trial, then $5/month.",
-      href: links.tebtallypro,
-      badge: "Live",
-      image: proPreview,
-      alt: "TebTally™ Pro dashboard preview",
-    },
-    {
-      id: "spelltally",
-      title: "SpellTally™",
-      description: "Weekly spelling practice and tests with teacher dashboards. Try free for 30 days. $7/month.",
-      href: links.spelltally,
-      badge: "Live",
-      image: spellPreview,
-      alt: "SpellTally™ dashboard preview",
-    },
-    {
-      id: "checktally",
-      title: "CheckTally™",
-      description: "Formative assessment app for teachers - quickly track student skills during classroom observations. $7/month for teachers.",
-      href: "https://check.tebtally.com",
-      badge: "Live",
-      image: checkPreview,
-      alt: "CheckTally™ dashboard preview",
-    },
-    {
-      id: "housetally",
-      title: "HouseTally™",
-      description: "House points tracking and live leaderboards for day-to-day school culture.",
-      href: "#",
-      badge: "In Development",
-      disabled: true,
-      image: housePreview,
-      alt: "HouseTally™ dashboard preview",
-    },
-    {
-      id: "classtally",
-      title: "ClassTally™",
-      description: "Class placement tool that builds next year's class lists based on academic, behaviour, ILP/EAL data plus relationships (friends, incompatibles, essential pairs).",
-      href: "#",
-      badge: "In Development",
-      disabled: true,
-      image: classPreview,
-      alt: "ClassTally™ dashboard preview",
-    },
-    {
-      id: "tracktally",
-      title: "TrackTally™",
-      description: "Fast, offline-friendly behaviour incident logging for classrooms. (Coming Soon)",
-      href: links.tracktally,
-      badge: "Pending Approval",
-      disabled: true,
-      image: trackPreview,
-      alt: "TrackTally™ dashboard preview",
-    },
-  ];
+const benefits = [
+  "Australian Curriculum aligned",
+  "Works offline when you need it",
+  "Google Classroom integration",
+  "No student contact info required",
+  "Export your data anytime",
+  "Free classroom tools included",
+  "14-30 day free trials",
+  "Cancel subscriptions anytime",
+];
 
-  const previewable = appPreviews.filter((app) => app.image);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isInteracting, setIsInteracting] = useState(false);
-  const [previewOpacity, setPreviewOpacity] = useState(1);
-  const activePreview = useMemo(() => previewable[activeIndex] ?? previewable[0], [previewable, activeIndex]);
-
-  useEffect(() => {
-    if (isInteracting || previewable.length === 0) return;
-    const id = setInterval(() => {
-      setPreviewOpacity(0);
-      setTimeout(() => {
-        setActiveIndex((idx) => (idx + 1) % previewable.length);
-        setPreviewOpacity(1);
-      }, 150);
-    }, 5500);
-    return () => clearInterval(id);
-  }, [isInteracting, previewable.length]);
-
-  const toolCategories = [
-    {
-      id: "timers",
-      title: "Timers",
-      description: "4 specialized timers for managing classroom activities and transitions.",
-      icon: "⏱️",
-      count: 4,
-    },
-    {
-      id: "class-tools",
-      title: "Classroom Tools",
-      description: "Random selectors, seating charts, noise meter, and more.",
-      icon: "🧰",
-      count: 9,
-    },
-  ];
-
-  const handlePrev = () => {
-    setIsInteracting(true);
-    setPreviewOpacity(0);
-    setTimeout(() => {
-      setActiveIndex((idx) => (idx - 1 + previewable.length) % previewable.length);
-      setPreviewOpacity(1);
-    }, 120);
-  };
-
-  const handleNext = () => {
-    setIsInteracting(true);
-    setPreviewOpacity(0);
-    setTimeout(() => {
-      setActiveIndex((idx) => (idx + 1) % previewable.length);
-      setPreviewOpacity(1);
-    }, 120);
-  };
+export default function HomePage() {
+  const [activeApp, setActiveApp] = useState(0);
 
   return (
-    <>
-      <section className="hero">
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
-          <h1 className="title" style={{ margin: 0 }}>
-            TebTally™
-          </h1>
-          <span
-            style={{
-              fontSize: 12,
-              background: "#EEF3FB",
-              color: "#42557a",
-              padding: "4px 8px",
-              borderRadius: 999,
-            }}
-          >
-            In development
-          </span>
-        </div>
-        <p className="subtitle">Classroom apps that cut teacher admin, not corners.</p>
-        <p style={{ marginTop: 8, fontSize: "1rem", color: "var(--text-muted)" }}>
-          Spelling tests, behaviour logging, and daily tools built by an Australian primary teacher.
-        </p>
-        <div style={{ marginTop: 18, display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <a
-            href="#tools"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              padding: "12px 18px",
-              borderRadius: 999,
-              background: "linear-gradient(135deg, #0f766e, #14b8a6)",
-              color: "#ffffff",
-              fontWeight: 600,
-              fontSize: "0.98rem",
-              textDecoration: "none",
-              boxShadow: "0 10px 24px -18px rgba(15, 118, 110, 0.8)",
-            }}
-          >
-            Explore free tools
-          </a>
-          <a
-            href="#apps"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              padding: "12px 18px",
-              borderRadius: 999,
-              border: "1px solid rgba(51, 208, 245, 0.4)",
-              background: "rgba(255,255,255,0.9)",
-              color: "#0f172a",
-              fontWeight: 600,
-              fontSize: "0.98rem",
-              textDecoration: "none",
-            }}
-          >
-            See premium apps
-          </a>
-        </div>
-      </section>
-
-      <section id="apps" style={{ paddingTop: 32, paddingBottom: 16 }}>
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <h2
-            style={{
-              fontSize: "clamp(1.5rem, 5vw, 2.25rem)",
-              fontWeight: 700,
-              margin: "0 0 12px",
-              letterSpacing: "-0.02em",
-              background: "linear-gradient(120deg, #33D0F5, #6D3CFF)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            Premium Apps
-          </h2>
-          <p style={{ fontSize: "clamp(0.9375rem, 2.5vw, 1.125rem)", color: "var(--text-muted)", maxWidth: 600, margin: "0 auto", padding: "0 8px" }}>
-            Browse the suite. Tap a card or use arrows to preview.
-          </p>
-        </div>
-
-        <div
-          className="grid"
-          style={{ gap: 20, gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", marginBottom: 24 }}
-        >
-          {appPreviews.map((app) => {
-            return (
-              <div
-                key={app.id}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  borderRadius: "var(--radius-md)",
-                  transition: "transform 150ms ease",
-                  outline: "none",
-                  boxShadow: "none",
-                }}
-                onMouseEnter={() => {
-                  setIsInteracting(true);
-                  setPreviewOpacity(0);
-                  setTimeout(() => {
-                    const previewIdx = previewable.findIndex((p) => p.id === app.id);
-                    if (previewIdx >= 0) setActiveIndex(previewIdx);
-                    setPreviewOpacity(1);
-                  }, 120);
-                }}
-                onMouseLeave={() => setIsInteracting(false)}
-                onFocus={() => {
-                  setIsInteracting(true);
-                  setPreviewOpacity(0);
-                  setTimeout(() => {
-                    const previewIdx = previewable.findIndex((p) => p.id === app.id);
-                    if (previewIdx >= 0) setActiveIndex(previewIdx);
-                    setPreviewOpacity(1);
-                  }, 120);
-                }}
-                onBlur={() => setIsInteracting(false)}
-                onClick={() => {
-                  setIsInteracting(true);
-                  setPreviewOpacity(0);
-                  setTimeout(() => {
-                    const previewIdx = previewable.findIndex((p) => p.id === app.id);
-                    if (previewIdx >= 0) setActiveIndex(previewIdx);
-                    setPreviewOpacity(1);
-                  }, 120);
-                }}
-                role="button"
-                tabIndex={0}
-              >
-                <AppCard
-                  title={app.title}
-                  href={app.href}
-                  description={app.description}
-                  premium={true}
-                  badge={app.badge}
-                  disabled={app.disabled}
-                />
-              </div>
-            );
-          })}
-        </div>
-
-        <div
-          style={{
-            maxWidth: 1100,
-            margin: "0 auto",
-            borderRadius: 20,
-            overflow: "hidden",
-            border: "1px solid #e2e8f0",
-            boxShadow: "0 18px 40px -24px rgba(15,23,42,0.45)",
-            background: "#fff",
-            display: "flex",
-            alignItems: "center",
-            position: "relative",
-          }}
-          onMouseEnter={() => setIsInteracting(true)}
-          onMouseLeave={() => setIsInteracting(false)}
-        >
-          <button
-            type="button"
-            aria-label="Previous preview"
-            onClick={handlePrev}
-            style={{
-              position: "absolute",
-              left: 8,
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: 44,
-              height: 44,
-              minWidth: 44,
-              minHeight: 44,
-              borderRadius: "50%",
-              border: "1px solid #e2e8f0",
-              background: "#fff",
-              boxShadow: "0 8px 16px -10px rgba(15,23,42,0.4)",
-              cursor: "pointer",
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "1.125rem",
-            }}
-          >
-            ←
-          </button>
-
+    <div className="min-h-screen" style={{ background: "var(--app-background)" }}>
+      {/* Hero Section */}
+      <section className="px-4 pb-16 pt-12 sm:px-6 sm:pb-24 sm:pt-20">
+        <div className="mx-auto max-w-4xl text-center">
           <div
-            style={{
-              flex: 1,
-              transition: "opacity 250ms ease",
-              opacity: previewOpacity,
-              display: "flex",
-              justifyContent: "center",
-              padding: 0,
-            }}
+            className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium shadow-sm"
+            style={{ background: "var(--surface-base)", color: "var(--text-muted)" }}
           >
-            <Image
-              key={activePreview.id}
-              src={activePreview.image as any}
-              alt={activePreview.alt || "App preview"}
-              style={{
-                width: "100%",
-                height: "auto",
-                display: "block",
-              }}
-              priority
-            />
+            <Sparkles className="h-4 w-4" style={{ color: "var(--primary-mid)" }} />
+            Suite of Teacher Apps
           </div>
-
-          <button
-            type="button"
-            aria-label="Next preview"
-            onClick={handleNext}
-            style={{
-              position: "absolute",
-              right: 8,
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: 44,
-              height: 44,
-              minWidth: 44,
-              minHeight: 44,
-              borderRadius: "50%",
-              border: "1px solid #e2e8f0",
-              background: "#fff",
-              boxShadow: "0 8px 16px -10px rgba(15,23,42,0.4)",
-              cursor: "pointer",
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "1.125rem",
-            }}
+          <h1
+            className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
+            style={{ color: "var(--text-main)" }}
           >
-            →
-          </button>
-        </div>
-      </section>
-
-      <section id="tools" style={{ paddingTop: 48 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 12 }}>
-          <h2 style={{ fontSize: "clamp(1.25rem, 4vw, 1.875rem)", fontWeight: 600, margin: 0, letterSpacing: "-0.01em" }}>
-            Free Teacher Tools
-          </h2>
-          <Link
-            href="/tools"
-            style={{
-              color: "var(--primary-mid)",
-              textDecoration: "none",
-              fontWeight: 500,
-              fontSize: "0.9375rem",
-            }}
-          >
-            View All →
-          </Link>
-        </div>
-        <p style={{ color: "var(--text-muted)", marginBottom: 24, fontSize: "1rem" }}>
-          No sign-up required. Works offline. Free forever.
-        </p>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 20,
-            maxWidth: 800,
-            margin: "0 auto",
-          }}
-        >
-          {toolCategories.map((category) => (
-            <Link
-              key={category.id}
-              href="/tools"
+            Classroom apps that cut{" "}
+            <span
               style={{
-                textDecoration: "none",
-                display: "block",
+                background: "linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
-              <div
-                style={{
-                  padding: "28px 24px",
-                  background: "var(--surface-base)",
-                  border: "1px solid var(--border-muted)",
-                  borderRadius: "var(--radius-md)",
-                  transition: "all var(--transition-normal)",
-                  cursor: "pointer",
-                  height: "100%",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                  e.currentTarget.style.boxShadow = "0 12px 24px rgba(0, 0, 0, 0.1)";
-                  e.currentTarget.style.borderColor = "var(--primary-mid)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "none";
-                  e.currentTarget.style.borderColor = "var(--border-muted)";
-                }}
-              >
-                <div style={{ fontSize: "2.5rem", marginBottom: 12 }}>{category.icon}</div>
-                <h3
-                  style={{
-                    fontSize: "1.25rem",
-                    fontWeight: 600,
-                    margin: "0 0 8px",
-                    color: "var(--text-base)",
-                  }}
-                >
-                  {category.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "0.9375rem",
-                    color: "var(--text-muted)",
-                    margin: "0 0 12px",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {category.description}
-                </p>
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    fontSize: "0.875rem",
-                    color: "var(--primary-mid)",
-                    fontWeight: 500,
-                  }}
-                >
-                  {category.count} tools <span style={{ fontSize: "1rem" }}>→</span>
-                </div>
-              </div>
+              admin, not corners
+            </span>
+          </h1>
+          <p
+            className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl"
+            style={{ color: "var(--text-muted)" }}
+          >
+            TebTally is a growing suite of focused classroom apps for Australian teachers. Spelling
+            tests, behaviour logging, formative assessment, and free daily tools.
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link
+              href="#apps"
+              className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:opacity-90"
+              style={{
+                background: "linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end))",
+              }}
+            >
+              Explore Apps
             </Link>
-          ))}
+            <Link
+              href="/tools"
+              className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-lg font-semibold transition"
+              style={{
+                background: "var(--surface-base)",
+                color: "var(--text-main)",
+                border: "1px solid var(--border-muted)",
+              }}
+            >
+              Try Free Tools
+            </Link>
+          </div>
+          <p className="mt-4 text-sm" style={{ color: "var(--text-muted)" }}>
+            Free trials available · No credit card required
+          </p>
         </div>
       </section>
 
-      <section id="about" className="about">
-        <h2>About TebTally™</h2>
-        <p>
-          TebTally™ brings together focused, teacher-first apps under one roof. As we grow, this hub will host account
-          management, billing, and single sign-on to each product.
-        </p>
-        <p style={{ color: "#42557a" }}>
-          Privacy & Terms live here and apply to the TebTally™ suite while individual product docs remain in their apps.
-        </p>
+      {/* Demo Preview Section */}
+      <section className="px-4 pb-16 sm:px-6 sm:pb-24">
+        <div className="mx-auto max-w-5xl">
+          <div
+            className="overflow-hidden rounded-3xl shadow-lg"
+            style={{ background: "var(--surface-base)", border: "1px solid var(--border-muted)" }}
+          >
+            {/* Browser chrome */}
+            <div
+              className="flex items-center gap-2 px-4 py-3"
+              style={{ background: "var(--surface-muted)", borderBottom: "1px solid var(--border-muted)" }}
+            >
+              <div className="h-3 w-3 rounded-full bg-red-400 opacity-60" />
+              <div className="h-3 w-3 rounded-full bg-yellow-400 opacity-60" />
+              <div className="h-3 w-3 rounded-full bg-green-400 opacity-60" />
+            </div>
+
+            {/* Preview content */}
+            <div className="p-6 sm:p-8">
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium" style={{ color: "var(--text-muted)" }}>
+                    Welcome to
+                  </p>
+                  <h3 className="text-xl font-semibold" style={{ color: "var(--text-main)" }}>
+                    TebTally Suite
+                  </h3>
+                </div>
+                <span
+                  className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white"
+                  style={{
+                    background: "linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end))",
+                  }}
+                >
+                  Growing
+                </span>
+              </div>
+
+              {/* App grid */}
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {apps.map((app, idx) => (
+                  <button
+                    key={app.id}
+                    onClick={() => setActiveApp(idx)}
+                    className="relative overflow-hidden rounded-2xl text-left transition-all"
+                    style={{
+                      background: "var(--surface-subtle)",
+                      border: activeApp === idx ? "2px solid var(--primary-mid)" : "1px solid var(--border-muted)",
+                      transform: activeApp === idx ? "scale(1.02)" : "scale(1)",
+                    }}
+                  >
+                    <div className="aspect-video w-full overflow-hidden">
+                      <Image
+                        src={app.image}
+                        alt={app.name}
+                        className="h-full w-full object-cover"
+                        style={{ opacity: activeApp === idx ? 1 : 0.5 }}
+                      />
+                    </div>
+                    <div className="p-3">
+                      <div className="mb-1 flex items-center justify-between">
+                        <span className="text-xs font-semibold" style={{ color: "var(--text-main)" }}>
+                          {app.name}
+                        </span>
+                        <span
+                          className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase"
+                          style={{
+                            background: app.badge === "Live" ? "rgba(16, 185, 129, 0.1)" : "rgba(100, 116, 139, 0.1)",
+                            color: app.badge === "Live" ? "#10b981" : "#64748b",
+                          }}
+                        >
+                          {app.badge}
+                        </span>
+                      </div>
+                      <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                        {app.description}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <p className="mt-6 text-center text-sm" style={{ color: "var(--text-muted)" }}>
+                One hub. Multiple focused apps. All your classroom tools connected.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
-    </>
+
+      {/* Features Section */}
+      <section id="features" className="px-4 py-16 sm:px-6 sm:py-24" style={{ background: "var(--surface-base)" }}>
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold sm:text-4xl" style={{ color: "var(--text-main)" }}>
+              Built for Australian teachers
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg" style={{ color: "var(--text-muted)" }}>
+              Every app in the TebTally suite is designed to solve real classroom problems
+            </p>
+          </div>
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature) => (
+              <div
+                key={feature.title}
+                className="rounded-3xl p-6 sm:p-8"
+                style={{ background: "var(--surface-subtle)", border: "1px solid var(--border-muted)" }}
+              >
+                <div
+                  className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl"
+                  style={{
+                    background: "linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end))",
+                  }}
+                >
+                  <feature.icon className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold" style={{ color: "var(--text-main)" }}>
+                  {feature.title}
+                </h3>
+                <p style={{ color: "var(--text-muted)" }}>{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Apps Section */}
+      <section id="apps" className="px-4 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold sm:text-4xl" style={{ color: "var(--text-main)" }}>
+              The TebTally Suite
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg" style={{ color: "var(--text-muted)" }}>
+              Each app tackles a specific classroom challenge. Use one or use them all.
+            </p>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {apps.map((app) => (
+              <a
+                key={app.id}
+                href={app.disabled ? undefined : app.href}
+                className="group overflow-hidden rounded-3xl transition hover:shadow-lg"
+                style={{
+                  background: "var(--surface-base)",
+                  border: "1px solid var(--border-muted)",
+                  pointerEvents: app.disabled ? "none" : "auto",
+                  opacity: app.disabled ? 0.7 : 1,
+                }}
+              >
+                <div className="relative aspect-video w-full overflow-hidden" style={{ background: "var(--surface-muted)" }}>
+                  <Image src={app.image} alt={app.name} className="h-full w-full object-cover" />
+                  <div className="absolute right-3 top-3">
+                    <span
+                      className="rounded-full px-3 py-1 text-xs font-semibold uppercase text-white"
+                      style={{
+                        background: app.badge === "Live" ? "#10b981" : "#64748b",
+                      }}
+                    >
+                      {app.badge}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="mb-2 flex items-center justify-between">
+                    <h3 className="text-lg font-semibold" style={{ color: "var(--text-main)" }}>
+                      {app.name}
+                    </h3>
+                    <span className="text-sm font-semibold" style={{ color: "var(--primary-mid)" }}>
+                      {app.price}
+                    </span>
+                  </div>
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+                    {app.description}
+                  </p>
+                  {app.trial && (
+                    <p className="mt-2 text-xs font-medium" style={{ color: "var(--primary-mid)" }}>
+                      {app.trial}
+                    </p>
+                  )}
+                </div>
+              </a>
+            ))}
+          </div>
+          <div className="mt-12 text-center">
+            <Link href="/pricing" className="inline-flex items-center gap-2 hover:underline" style={{ color: "var(--primary-mid)" }}>
+              View detailed pricing →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="px-4 py-16 sm:px-6 sm:py-24" style={{ background: "var(--surface-base)" }}>
+        <div className="mx-auto max-w-4xl">
+          <div
+            className="rounded-3xl p-8 sm:p-12"
+            style={{
+              background: "linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end))",
+            }}
+          >
+            <h2 className="mb-8 text-center text-2xl font-bold text-white sm:text-3xl">
+              Why teachers love TebTally
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {benefits.map((benefit) => (
+                <div key={benefit} className="flex items-center gap-3">
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/20">
+                    <Check className="h-4 w-4 text-white" strokeWidth={3} />
+                  </div>
+                  <span className="text-white">{benefit}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Free Tools Section */}
+      <section id="tools" className="px-4 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold sm:text-4xl" style={{ color: "var(--text-main)" }}>
+              Free Classroom Tools
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg" style={{ color: "var(--text-muted)" }}>
+              No sign-up required. Works offline. Free forever.
+            </p>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <Link
+              href="/tools"
+              className="rounded-3xl p-8 transition hover:shadow-lg"
+              style={{ background: "var(--surface-base)", border: "1px solid var(--border-muted)" }}
+            >
+              <div className="mb-4 text-4xl">⏱️</div>
+              <h3 className="mb-2 text-xl font-semibold" style={{ color: "var(--text-main)" }}>
+                Timers
+              </h3>
+              <p className="mb-4" style={{ color: "var(--text-muted)" }}>
+                4 specialized timers for managing classroom activities and transitions.
+              </p>
+              <span className="inline-flex items-center gap-2 text-sm font-medium" style={{ color: "var(--primary-mid)" }}>
+                Explore timers →
+              </span>
+            </Link>
+            <Link
+              href="/tools"
+              className="rounded-3xl p-8 transition hover:shadow-lg"
+              style={{ background: "var(--surface-base)", border: "1px solid var(--border-muted)" }}
+            >
+              <div className="mb-4 text-4xl">🧰</div>
+              <h3 className="mb-2 text-xl font-semibold" style={{ color: "var(--text-main)" }}>
+                Classroom Tools
+              </h3>
+              <p className="mb-4" style={{ color: "var(--text-muted)" }}>
+                Random selectors, seating charts, noise meter, and more.
+              </p>
+              <span className="inline-flex items-center gap-2 text-sm font-medium" style={{ color: "var(--primary-mid)" }}>
+                View all tools →
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="px-4 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-bold sm:text-4xl" style={{ color: "var(--text-main)" }}>
+            Ready to simplify your classroom admin?
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg" style={{ color: "var(--text-muted)" }}>
+            Join teachers across Australia using TebTally apps for spelling, assessment, and daily
+            classroom management.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link
+              href="#apps"
+              className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-lg font-semibold text-white shadow-lg transition hover:opacity-90"
+              style={{
+                background: "linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end))",
+              }}
+            >
+              Explore Apps
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-lg font-semibold transition"
+              style={{
+                background: "var(--surface-base)",
+                color: "var(--text-main)",
+                border: "1px solid var(--border-muted)",
+              }}
+            >
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer
+        className="px-4 py-12 sm:px-6"
+        style={{ background: "var(--surface-base)", borderTop: "1px solid var(--border-muted)" }}
+      >
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+            <div className="flex items-center gap-2">
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold text-white"
+                style={{
+                  background: "linear-gradient(120deg, var(--primary-gradient-start), var(--primary-gradient-end))",
+                }}
+              >
+                TT
+              </div>
+              <span className="font-semibold" style={{ color: "var(--text-main)" }}>
+                TebTally
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-6 text-sm" style={{ color: "var(--text-muted)" }}>
+              <Link href="/pricing" className="transition hover:opacity-80">
+                Pricing
+              </Link>
+              <Link href="/privacy" className="transition hover:opacity-80">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="transition hover:opacity-80">
+                Terms of Service
+              </Link>
+              <Link href="/contact" className="transition hover:opacity-80">
+                Contact Us
+              </Link>
+            </div>
+          </div>
+          <div className="mt-8 text-center text-sm" style={{ color: "var(--text-muted)" }}>
+            © {new Date().getFullYear()} TebTally. Made with love in Australia.
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }

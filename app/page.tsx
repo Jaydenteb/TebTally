@@ -247,48 +247,68 @@ export default function HomePage() {
 
               {/* App grid */}
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {apps.map((app, idx) => (
-                  <button
-                    key={app.id}
-                    onClick={() => setActiveApp(idx)}
-                    className="relative overflow-hidden rounded-2xl text-left transition-all duration-200"
-                    style={{
-                      background: "var(--surface-subtle)",
-                      border: activeApp === idx ? "2px solid var(--primary-mid)" : "1px solid var(--border-muted)",
-                      transform: activeApp === idx ? "scale(1.05)" : "scale(1)",
-                      boxShadow: activeApp === idx ? "0 8px 25px rgba(109, 60, 255, 0.15)" : "none",
-                      zIndex: activeApp === idx ? 10 : 1,
-                    }}
-                  >
-                    <div className="aspect-video w-full overflow-hidden">
-                      <Image
-                        src={app.image}
-                        alt={app.name}
-                        className="h-full w-full object-cover transition-opacity duration-200"
-                        style={{ opacity: activeApp === idx ? 1 : 0.5 }}
-                      />
-                    </div>
-                    <div className="p-3">
-                      <div className="mb-1 flex items-center justify-between">
-                        <span className="text-xs font-semibold" style={{ color: "var(--text-main)" }}>
-                          {app.name}
-                        </span>
-                        <span
-                          className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase"
-                          style={{
-                            background: app.badge === "Live" ? "rgba(16, 185, 129, 0.1)" : "rgba(100, 116, 139, 0.1)",
-                            color: app.badge === "Live" ? "#10b981" : "#64748b",
-                          }}
-                        >
-                          {app.badge}
-                        </span>
+                {apps.map((app, idx) => {
+                  const isLive = !app.disabled;
+                  const TileWrapper = isLive ? "a" : "button";
+                  const tileProps = isLive
+                    ? { href: app.href, target: "_blank", rel: "noopener noreferrer" }
+                    : { onClick: () => setActiveApp(idx) };
+
+                  return (
+                    <TileWrapper
+                      key={app.id}
+                      {...tileProps}
+                      onMouseEnter={() => setActiveApp(idx)}
+                      className="relative overflow-hidden rounded-2xl text-left transition-all duration-200"
+                      style={{
+                        background: "var(--surface-subtle)",
+                        border: activeApp === idx ? "2px solid var(--primary-mid)" : "1px solid var(--border-muted)",
+                        transform: activeApp === idx ? "scale(1.05)" : "scale(1)",
+                        boxShadow: activeApp === idx ? "0 8px 25px rgba(109, 60, 255, 0.15)" : "none",
+                        zIndex: activeApp === idx ? 10 : 1,
+                        cursor: isLive ? "pointer" : "default",
+                      }}
+                    >
+                      <div className="aspect-video w-full overflow-hidden relative">
+                        <Image
+                          src={app.image}
+                          alt={app.name}
+                          className="h-full w-full object-cover transition-opacity duration-200"
+                          style={{ opacity: activeApp === idx ? 1 : 0.5 }}
+                        />
+                        {isLive && (
+                          <div
+                            className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 hover:opacity-100"
+                            style={{ background: "rgba(0,0,0,0.4)" }}
+                          >
+                            <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold" style={{ color: "var(--primary-mid)" }}>
+                              Open App →
+                            </span>
+                          </div>
+                        )}
                       </div>
-                      <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                        {app.shortDescription}
-                      </p>
-                    </div>
-                  </button>
-                ))}
+                      <div className="p-3">
+                        <div className="mb-1 flex items-center justify-between">
+                          <span className="text-xs font-semibold" style={{ color: "var(--text-main)" }}>
+                            {app.name}
+                          </span>
+                          <span
+                            className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase"
+                            style={{
+                              background: app.badge === "Live" ? "rgba(16, 185, 129, 0.1)" : "rgba(100, 116, 139, 0.1)",
+                              color: app.badge === "Live" ? "#10b981" : "#64748b",
+                            }}
+                          >
+                            {app.badge}
+                          </span>
+                        </div>
+                        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                          {app.shortDescription}
+                        </p>
+                      </div>
+                    </TileWrapper>
+                  );
+                })}
               </div>
 
               {/* Selected app description */}

@@ -63,6 +63,23 @@ export default function Header() {
               {link.label}
             </a>
           ))}
+          <a
+            href="https://id.tebtally.com/login"
+            className="nav-link"
+            style={{
+              background: "linear-gradient(120deg, #33D0F5, #6D3CFF)",
+              color: "white",
+              padding: "0.5rem 1rem",
+              borderRadius: "0.5rem",
+              fontWeight: 600,
+              textDecoration: "none",
+              transition: "opacity 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+          >
+            Sign In
+          </a>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -140,6 +157,22 @@ export default function Header() {
                   {link.label}
                 </a>
               ))}
+              <a
+                href="https://id.tebtally.com/login"
+                className="mobile-nav-link"
+                onClick={() => setMobileNavOpen(false)}
+                style={{
+                  background: "linear-gradient(120deg, #33D0F5, #6D3CFF)",
+                  color: "white",
+                  padding: "0.75rem 1rem",
+                  borderRadius: "0.5rem",
+                  fontWeight: 600,
+                  textAlign: "center",
+                  marginTop: "1rem",
+                }}
+              >
+                Sign In
+              </a>
             </nav>
           </div>
         </div>

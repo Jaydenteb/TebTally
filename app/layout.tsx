@@ -47,6 +47,7 @@ export const metadata: Metadata = {
 import './globals.css'
 import { Analytics } from '@vercel/analytics/react'
 import Header from '@/components/Header'
+import FeedbackWidget from '@/components/feedback/FeedbackWidget'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const year = new Date().getFullYear();
@@ -93,6 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </footer>
         <Analytics />
+        <FeedbackWidget />
       </body>
     </html>
   )

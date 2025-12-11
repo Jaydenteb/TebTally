@@ -71,7 +71,7 @@ const apps = [
     price: "$5/mo",
     trial: "14-day trial",
     image: proPreview,
-    href: "https://pro.tebtally.com",
+    href: "/tebtally-pro",
   },
   {
     id: "spelltally",
@@ -82,7 +82,7 @@ const apps = [
     price: "$7/mo",
     trial: "30-day trial",
     image: spellPreview,
-    href: "https://spelltally.com",
+    href: "/spelltally",
   },
   {
     id: "checktally",
@@ -93,7 +93,7 @@ const apps = [
     price: "$7/mo",
     trial: "30-day trial",
     image: checkPreview,
-    href: "https://check.tebtally.com",
+    href: "/checktally",
   },
   {
     id: "tracktally",
@@ -251,7 +251,7 @@ export default function HomePage() {
                   const isLive = !app.disabled;
                   const TileWrapper = isLive ? "a" : "button";
                   const tileProps = isLive
-                    ? { href: app.href, target: "_blank", rel: "noopener noreferrer" }
+                    ? { href: app.href }
                     : { onClick: () => setActiveApp(idx) };
 
                   return (
@@ -282,7 +282,7 @@ export default function HomePage() {
                             style={{ background: "rgba(0,0,0,0.4)" }}
                           >
                             <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold" style={{ color: "var(--primary-mid)" }}>
-                              Open App →
+                              Learn More →
                             </span>
                           </div>
                         )}
@@ -357,7 +357,7 @@ export default function HomePage() {
                         className="mt-3 inline-flex items-center gap-1 text-sm font-medium transition hover:gap-2"
                         style={{ color: "var(--primary-mid)" }}
                       >
-                        Try {apps[activeApp].name} →
+                        Learn more about {apps[activeApp].name} →
                       </a>
                     )}
                   </div>

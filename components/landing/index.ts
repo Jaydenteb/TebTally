@@ -1,0 +1,6 @@
+export { LandingHero } from './LandingHero'
+export { FeatureGrid } from './FeatureGrid'
+export { HowItWorks } from './HowItWorks'
+export { PricingCard } from './PricingCard'
+export { FAQ } from './FAQ'
+export { FinalCTA } from './FinalCTA'

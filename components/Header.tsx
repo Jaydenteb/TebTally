@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 
 const navLinks = [
-  { href: "/#apps", label: "Apps" },
+  { href: "/spelltally", label: "SpellTally" },
+  { href: "/checktally", label: "CheckTally" },
+  { href: "/tebtally-pro", label: "Pro" },
+  { href: "/tools", label: "Free Tools" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
-  { href: "/#about", label: "About" },
-  { href: "/privacy", label: "Privacy" },
-  { href: "/terms", label: "Terms" },
 ];
 
 export default function Header() {

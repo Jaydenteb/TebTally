@@ -37,7 +37,7 @@ export function LandingHero({
       <div className="hero-content">
         {badge && (
           <span className="brand-pill">
-            <Sparkles size={12} style={{ marginRight: '6px' }} />
+            <Sparkles size={14} />
             {badge}
           </span>
         )}

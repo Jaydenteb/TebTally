@@ -677,13 +677,89 @@ export default function FeedbackWidget() {
 
 ---
 
-## CORS
+## Backend Configuration (TebTallyIdentity)
 
-The API allows requests from:
-- `https://tebtally.com`
-- `https://www.tebtally.com`
-- `http://localhost:3000`
-- `http://localhost:3001`
+When adding the feedback widget to a **new domain**, you must whitelist that domain in the TebTallyIdentity backend for CORS.
 
-To add a new domain, update `ALLOWED_ORIGINS` in:
-`tebtally-identity/src/app/api/feedback/route.ts`
+### Step 1: Add Domain to CORS Whitelist
+
+**File:** `d:\.codex\tebtally-identity\src\app\api\feedback\route.ts`
+
+Find the `ALLOWED_ORIGINS` array near the top of the file:
+
+```typescript
+// CORS allowed origins
+const ALLOWED_ORIGINS = [
+  "https://tebtally.com",
+  "https://www.tebtally.com",
+  "http://localhost:3000",
+  "http://localhost:3001",
+];
+```
+
+Add your new domain(s):
+
+```typescript
+const ALLOWED_ORIGINS = [
+  "https://tebtally.com",
+  "https://www.tebtally.com",
+  "https://spelltally.com",      // Add new domain
+  "https://www.spelltally.com",  // Add www variant
+  "http://localhost:3000",
+  "http://localhost:3001",
+];
+```
+
+### Step 2: Deploy TebTallyIdentity
+
+After updating CORS, commit and deploy TebTallyIdentity:
+
+```bash
+cd d:\.codex\tebtally-identity
+git add src/app/api/feedback/route.ts
+git commit -m "feat: add [app-name] to feedback CORS whitelist"
+git push
+```
+
+The Vercel deployment will automatically update id.tebtally.com.
+
+### Step 3: Verify
+
+Test by opening your app and submitting a test feedback. Check:
+1. No CORS errors in browser console
+2. Feedback appears at https://id.tebtally.com/admin/feedback
+3. Source field shows your app name
+
+---
+
+## Current CORS Whitelist
+
+| Domain | Status |
+|--------|--------|
+| `https://tebtally.com` | Allowed |
+| `https://www.tebtally.com` | Allowed |
+| `http://localhost:3000` | Allowed (dev) |
+| `http://localhost:3001` | Allowed (dev) |
+
+---
+
+## Troubleshooting
+
+### CORS Error in Console
+
+```
+Access to fetch at 'https://id.tebtally.com/api/feedback' from origin 'https://yourapp.com'
+has been blocked by CORS policy
+```
+
+**Solution:** Add your domain to `ALLOWED_ORIGINS` in TebTallyIdentity and redeploy.
+
+### 429 Too Many Requests
+
+The API rate limits to 5 submissions per hour per IP. Wait an hour or test from a different network.
+
+### Feedback Not Appearing in Admin
+
+1. Check browser Network tab for the POST response
+2. Verify the response has `"success": true`
+3. Check the `source` field matches your app name for filtering

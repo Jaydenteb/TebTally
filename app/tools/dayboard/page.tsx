@@ -230,19 +230,13 @@ export default function DayboardPage() {
     {
       name: 'SpellTally',
       description: 'Engaging spelling practice with competitive gameplay.',
-      url: process.env.NEXT_PUBLIC_SPELLTALLY_URL || 'http://localhost:3001',
+      url: 'https://spell.tebtally.com',
       badge: 'Premium'
     },
     {
-      name: 'TrackTally',
-      description: 'Professional behaviour tracking and reporting.',
-      url: process.env.NEXT_PUBLIC_TRACKTALLY_URL || 'http://localhost:3003',
-      badge: 'Premium'
-    },
-    {
-      name: 'WritingTally',
-      description: 'Writing assessment made simple and effective.',
-      url: process.env.NEXT_PUBLIC_WRITINGTALLY_URL || 'http://localhost:3002',
+      name: 'CheckTally',
+      description: 'Quick and comprehensive formative assessment tool.',
+      url: 'https://check.tebtally.com',
       badge: 'Premium'
     }
   ];
@@ -514,8 +508,8 @@ export default function DayboardPage() {
         title="Want Advanced Planning Features?"
         description="Upgrade to get drag-and-drop scheduling, special events, multiple class periods, and PDF exports."
         appName="TebTally Pro"
-        appUrl="#"
-        badge="Coming Soon"
+        appUrl="https://pro.tebtally.com"
+        badge="Premium"
       />
 
       <div style={{ maxWidth: 1000, margin: '0 auto' }}>

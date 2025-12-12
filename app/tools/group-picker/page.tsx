@@ -173,16 +173,16 @@ export default function GroupPickerPage() {
 
   const premiumApps = [
     {
-      name: 'TrackTally',
-      description: 'Fast, offline-friendly behaviour incident logging for classrooms.',
-      url: process.env.NEXT_PUBLIC_TRACKTALLY_URL || 'http://localhost:3003',
-      badge: 'Offline First',
+      name: 'SpellTally',
+      description: 'Engaging spelling practice with competitive gameplay.',
+      url: 'https://spell.tebtally.com',
+      badge: 'Premium',
     },
     {
-      name: 'WritingTally',
-      description: 'End-to-end writing assessments with rubrics and AI feedback.',
-      url: process.env.NEXT_PUBLIC_WRITETALLY_URL || 'http://localhost:3002',
-      badge: 'AI-Powered',
+      name: 'CheckTally',
+      description: 'Quick and comprehensive formative assessment tool.',
+      url: 'https://check.tebtally.com',
+      badge: 'Premium',
     },
   ];
 
@@ -193,10 +193,10 @@ export default function GroupPickerPage() {
     >
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         <PremiumCallout
-          title="Need comprehensive student management?"
-          description="WritingTally provides end-to-end writing assessments with rubrics, peer review, and AI-powered feedback."
-          appName="WritingTally"
-          appUrl={process.env.NEXT_PUBLIC_WRITETALLY_URL || 'http://localhost:3002'}
+          title="Want Quick Formative Assessments?"
+          description="CheckTally offers quick and comprehensive formative assessment tools for your classroom."
+          appName="CheckTally"
+          appUrl="https://check.tebtally.com"
           badge="Premium"
         />
 

@@ -122,16 +122,16 @@ export default function TimerPage() {
 
   const premiumApps = [
     {
-      name: 'TrackTally',
-      description: 'Fast, offline-friendly behaviour incident logging for classrooms.',
-      url: process.env.NEXT_PUBLIC_TRACKTALLY_URL || 'http://localhost:3003',
-      badge: 'Offline First',
+      name: 'SpellTally',
+      description: 'Engaging spelling practice with competitive gameplay.',
+      url: 'https://spell.tebtally.com',
+      badge: 'Premium',
     },
     {
-      name: 'SpellTally',
-      description: 'Weekly spelling practice and tests with teacher dashboards.',
-      url: process.env.NEXT_PUBLIC_SPELLTALLY_URL || 'http://localhost:3001',
-      badge: 'Popular',
+      name: 'CheckTally',
+      description: 'Quick and comprehensive formative assessment tool.',
+      url: 'https://check.tebtally.com',
+      badge: 'Premium',
     },
   ];
 
@@ -141,10 +141,10 @@ export default function TimerPage() {
       description="Countdown timer with customizable duration and alarm sounds."
     >
       <PremiumCallout
-        title="Need more classroom management tools?"
-        description="TrackTally helps you log behaviour incidents quickly with offline support and detailed analytics."
-        appName="TrackTally"
-        appUrl={process.env.NEXT_PUBLIC_TRACKTALLY_URL || 'http://localhost:3003'}
+        title="Want engaging spelling practice?"
+        description="SpellTally provides weekly spelling tests with student dashboards and competitive gameplay."
+        appName="SpellTally"
+        appUrl="https://spell.tebtally.com"
         badge="Premium"
       />
 

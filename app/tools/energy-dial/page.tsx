@@ -109,19 +109,13 @@ export default function EnergyDialPage() {
     {
       name: 'SpellTally',
       description: 'Engaging spelling practice with competitive gameplay.',
-      url: process.env.NEXT_PUBLIC_SPELLTALLY_URL || 'http://localhost:3001',
+      url: 'https://spell.tebtally.com',
       badge: 'Premium'
     },
     {
-      name: 'TrackTally',
-      description: 'Professional behaviour tracking and reporting.',
-      url: process.env.NEXT_PUBLIC_TRACKTALLY_URL || 'http://localhost:3003',
-      badge: 'Premium'
-    },
-    {
-      name: 'WritingTally',
-      description: 'Writing assessment made simple and effective.',
-      url: process.env.NEXT_PUBLIC_WRITINGTALLY_URL || 'http://localhost:3002',
+      name: 'CheckTally',
+      description: 'Quick and comprehensive formative assessment tool.',
+      url: 'https://check.tebtally.com',
       badge: 'Premium'
     }
   ];
@@ -132,10 +126,10 @@ export default function EnergyDialPage() {
       description="Monitor and track your classroom's energy levels throughout the day."
     >
       <PremiumCallout
-        title="Want Comprehensive Behaviour Tracking?"
-        description="TrackTally offers professional behaviour management with detailed analytics and reporting."
-        appName="TrackTally"
-        appUrl={process.env.NEXT_PUBLIC_TRACKTALLY_URL || 'http://localhost:3003'}
+        title="Want Quick Formative Assessments?"
+        description="CheckTally offers quick and comprehensive formative assessment tools for your classroom."
+        appName="CheckTally"
+        appUrl="https://check.tebtally.com"
         badge="Premium"
       />
 

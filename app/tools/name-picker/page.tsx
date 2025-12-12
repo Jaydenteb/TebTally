@@ -162,15 +162,15 @@ export default function NamePickerPage() {
   const premiumApps = [
     {
       name: 'SpellTally',
-      description: 'Weekly spelling practice and tests with teacher dashboards.',
-      url: process.env.NEXT_PUBLIC_SPELLTALLY_URL || 'http://localhost:3001',
-      badge: 'Popular',
+      description: 'Engaging spelling practice with competitive gameplay.',
+      url: 'https://spell.tebtally.com',
+      badge: 'Premium',
     },
     {
-      name: 'WritingTally',
-      description: 'End-to-end writing assessments with rubrics and AI feedback.',
-      url: process.env.NEXT_PUBLIC_WRITETALLY_URL || 'http://localhost:3002',
-      badge: 'AI-Powered',
+      name: 'CheckTally',
+      description: 'Quick and comprehensive formative assessment tool.',
+      url: 'https://check.tebtally.com',
+      badge: 'Premium',
     },
   ];
 
@@ -184,7 +184,7 @@ export default function NamePickerPage() {
           title="Want engaging spelling practice?"
           description="SpellTally provides weekly spelling tests with student dashboards and automatic grading."
           appName="SpellTally"
-          appUrl={process.env.NEXT_PUBLIC_SPELLTALLY_URL || 'http://localhost:3001'}
+          appUrl="https://spell.tebtally.com"
           badge="Premium"
         />
 

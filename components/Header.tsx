@@ -37,147 +37,149 @@ export default function Header() {
   }, [mobileNavOpen]);
 
   return (
-    <header className="glass-panel">
-      <div className="header-inner">
-        <a
-          href="/"
-          className="brand-text"
-          style={{
-            background: "linear-gradient(120deg, #33D0F5, #6D3CFF)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            fontSize: "1.5rem",
-            fontWeight: 700,
-            letterSpacing: "0.02em",
-            textDecoration: "none",
-            display: "inline-block",
-          }}
-        >
-          TebTally™
-        </a>
-
-        {/* Desktop Navigation */}
-        <nav className="desktop-nav">
-          {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className="nav-link">
-              {link.label}
-            </a>
-          ))}
+    <>
+      <header className="glass-panel">
+        <div className="header-inner">
           <a
-            href="https://id.tebtally.com/login"
-            className="nav-link"
+            href="/"
+            className="brand-text"
             style={{
               background: "linear-gradient(120deg, #33D0F5, #6D3CFF)",
-              color: "white",
-              padding: "0.5rem 1rem",
-              borderRadius: "0.5rem",
-              fontWeight: 600,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              letterSpacing: "0.02em",
               textDecoration: "none",
-              transition: "opacity 0.2s",
+              display: "inline-block",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
-            Sign In
+            TebTally™
           </a>
-        </nav>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="mobile-menu-btn"
-          onClick={() => setMobileNavOpen(true)}
-          aria-label="Open menu"
-          aria-expanded={mobileNavOpen}
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+          {/* Desktop Navigation */}
+          <nav className="desktop-nav">
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href} className="nav-link">
+                {link.label}
+              </a>
+            ))}
+            <a
+              href="https://id.tebtally.com/login"
+              className="nav-link"
+              style={{
+                background: "linear-gradient(120deg, #33D0F5, #6D3CFF)",
+                color: "white",
+                padding: "0.5rem 1rem",
+                borderRadius: "0.5rem",
+                fontWeight: 600,
+                textDecoration: "none",
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              Sign In
+            </a>
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setMobileNavOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={mobileNavOpen}
           >
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </header>
 
-        {/* Mobile Navigation Overlay */}
-        <div
-          className={`mobile-nav ${mobileNavOpen ? "open" : ""}`}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setMobileNavOpen(false);
-          }}
-        >
-          <div className="mobile-nav-content">
-            <div className="mobile-nav-header">
-              <span
-                style={{
-                  background: "linear-gradient(120deg, #33D0F5, #6D3CFF)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  fontSize: "1.25rem",
-                  fontWeight: 700,
-                }}
+      {/* Mobile Navigation Overlay - Outside header for proper positioning */}
+      <div
+        className={`mobile-nav ${mobileNavOpen ? "open" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) setMobileNavOpen(false);
+        }}
+      >
+        <div className="mobile-nav-content">
+          <div className="mobile-nav-header">
+            <span
+              style={{
+                background: "linear-gradient(120deg, #33D0F5, #6D3CFF)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                fontSize: "1.25rem",
+                fontWeight: 700,
+              }}
+            >
+              TebTally™
+            </span>
+            <button
+              className="mobile-nav-close"
+              onClick={() => setMobileNavOpen(false)}
+              aria-label="Close menu"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                TebTally™
-              </span>
-              <button
-                className="mobile-nav-close"
-                onClick={() => setMobileNavOpen(false)}
-                aria-label="Close menu"
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            </div>
-            <nav className="mobile-nav-links">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="mobile-nav-link"
-                  onClick={() => setMobileNavOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <nav className="mobile-nav-links">
+            {navLinks.map((link) => (
               <a
-                href="https://id.tebtally.com/login"
+                key={link.href}
+                href={link.href}
                 className="mobile-nav-link"
                 onClick={() => setMobileNavOpen(false)}
-                style={{
-                  background: "linear-gradient(120deg, #33D0F5, #6D3CFF)",
-                  color: "white",
-                  padding: "0.75rem 1rem",
-                  borderRadius: "0.5rem",
-                  fontWeight: 600,
-                  textAlign: "center",
-                  marginTop: "1rem",
-                }}
               >
-                Sign In
+                {link.label}
               </a>
-            </nav>
-          </div>
+            ))}
+            <a
+              href="https://id.tebtally.com/login"
+              className="mobile-nav-link"
+              onClick={() => setMobileNavOpen(false)}
+              style={{
+                background: "linear-gradient(120deg, #33D0F5, #6D3CFF)",
+                color: "white",
+                padding: "0.875rem 1rem",
+                borderRadius: "0.5rem",
+                fontWeight: 600,
+                textAlign: "center",
+                marginTop: "1rem",
+              }}
+            >
+              Sign In
+            </a>
+          </nav>
         </div>
       </div>
-    </header>
+    </>
   );
 }

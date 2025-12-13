@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import ToolLayout from '@/components/tools/ToolLayout';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -26,7 +26,9 @@ export default function WheelSpinnerPage() {
   const [rotation, setRotation] = useState(0);
   const [result, setResult] = useState<string | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [canvasSize, setCanvasSize] = useState(300);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Load segments
   useEffect(() => {
@@ -52,20 +54,43 @@ export default function WheelSpinnerPage() {
     setStorageItem('wheel-spinner-sound', soundEnabled);
   }, [soundEnabled]);
 
-  // Draw wheel
+  // Handle responsive canvas sizing
   useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        // Max size 400px, min size 250px, responsive to container
+        const newSize = Math.min(400, Math.max(250, containerWidth - 40));
+        setCanvasSize(newSize);
+      }
+    };
+
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  // Draw wheel function
+  const drawWheel = useCallback(() => {
     if (!canvasRef.current || segments.length === 0) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = Math.min(centerX, centerY) - 10;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvasSize * dpr;
+    canvas.height = canvasSize * dpr;
+    canvas.style.width = `${canvasSize}px`;
+    canvas.style.height = `${canvasSize}px`;
+    ctx.scale(dpr, dpr);
+
+    const centerX = canvasSize / 2;
+    const centerY = canvasSize / 2;
+    const radius = (canvasSize / 2) - 10;
 
     // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvasSize, canvasSize);
 
     // Draw segments
     const anglePerSegment = (2 * Math.PI) / segments.length;
@@ -81,32 +106,48 @@ export default function WheelSpinnerPage() {
       ctx.fillStyle = segment.color;
       ctx.fill();
       ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Draw text
+      // Draw text - scale font based on canvas size
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.rotate(startAngle + anglePerSegment / 2);
       ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 16px Inter, sans-serif';
+      const fontSize = Math.max(12, Math.floor(canvasSize / 25));
+      ctx.font = `bold ${fontSize}px Inter, sans-serif`;
       ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-      ctx.shadowBlur = 4;
-      ctx.fillText(segment.label, radius - 20, 0);
+      ctx.shadowBlur = 3;
+
+      // Truncate label if too long
+      const maxLabelWidth = radius - 30;
+      let label = segment.label;
+      while (ctx.measureText(label).width > maxLabelWidth && label.length > 3) {
+        label = label.slice(0, -1);
+      }
+      if (label !== segment.label) label += '…';
+
+      ctx.fillText(label, radius - 15, 0);
       ctx.restore();
     });
 
-    // Draw center circle
+    // Draw center circle - scale based on canvas size
+    const centerRadius = Math.max(15, canvasSize / 20);
     ctx.beginPath();
-    ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
+    ctx.arc(centerX, centerY, centerRadius, 0, 2 * Math.PI);
     ctx.fillStyle = '#ffffff';
     ctx.fill();
-    ctx.strokeStyle = 'var(--primary-mid)';
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#5a62ff';
+    ctx.lineWidth = 3;
     ctx.stroke();
-  }, [segments]);
+  }, [segments, canvasSize]);
+
+  // Draw wheel when segments or size changes
+  useEffect(() => {
+    drawWheel();
+  }, [drawWheel]);
 
   const addSegment = () => {
     if (!newLabel.trim()) return;
@@ -208,6 +249,9 @@ export default function WheelSpinnerPage() {
     }, 4000);
   };
 
+  // Calculate pointer size based on canvas size
+  const pointerSize = Math.max(15, canvasSize / 20);
+
   return (
     <ToolLayout
       title="Wheel Spinner"
@@ -216,16 +260,17 @@ export default function WheelSpinnerPage() {
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         {/* Wheel Display */}
         <Card padding="large">
-          <div style={{ textAlign: 'center' }}>
-            {/* Pointer */}
+          <div ref={containerRef} style={{ textAlign: 'center' }}>
+            {/* Wheel Container */}
             <div
               style={{
                 position: 'relative',
-                width: 400,
-                height: 400,
+                width: canvasSize,
+                height: canvasSize,
                 margin: '0 auto 24px',
               }}
             >
+              {/* Pointer */}
               <div
                 style={{
                   position: 'absolute',
@@ -234,26 +279,25 @@ export default function WheelSpinnerPage() {
                   transform: 'translateX(-50%)',
                   width: 0,
                   height: 0,
-                  borderLeft: '20px solid transparent',
-                  borderRight: '20px solid transparent',
-                  borderTop: '40px solid var(--primary-mid)',
+                  borderLeft: `${pointerSize}px solid transparent`,
+                  borderRight: `${pointerSize}px solid transparent`,
+                  borderTop: `${pointerSize * 2}px solid var(--primary-mid)`,
                   zIndex: 10,
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
                 }}
               />
 
               {/* Wheel */}
               <div
                 style={{
-                  width: 400,
-                  height: 400,
+                  width: canvasSize,
+                  height: canvasSize,
                   transition: isSpinning ? 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none',
                   transform: `rotate(${rotation}deg)`,
                 }}
               >
                 <canvas
                   ref={canvasRef}
-                  width={400}
-                  height={400}
                   style={{ display: 'block' }}
                 />
               </div>
@@ -267,8 +311,9 @@ export default function WheelSpinnerPage() {
                   background: 'linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end))',
                   color: 'white',
                   borderRadius: 'var(--radius-md)',
-                  fontSize: '1.5rem',
+                  fontSize: 'clamp(1.125rem, 4vw, 1.5rem)',
                   fontWeight: 700,
+                  wordBreak: 'break-word',
                 }}
               >
                 🎉 {result}
@@ -300,85 +345,48 @@ export default function WheelSpinnerPage() {
             Customize Segments
           </h3>
 
-          <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+          {/* Add Segment - Responsive */}
+          <div className="wheel-add-segment">
             <Input
               placeholder="Enter segment label"
               value={newLabel}
               onChange={(e) => setNewLabel(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && addSegment()}
-              style={{ flex: 1 }}
+              style={{ flex: 1, minWidth: 0 }}
             />
             <Button onClick={addSegment} disabled={!newLabel.trim()}>
-              Add Segment
+              Add
             </Button>
           </div>
 
           {segments.length > 0 ? (
             <div style={{ display: 'grid', gap: 12 }}>
-              {segments.map((segment, index) => (
+              {segments.map((segment) => (
                 <div
                   key={segment.id}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '40px 1fr 120px 40px',
-                    gap: 12,
-                    alignItems: 'center',
-                    padding: 12,
-                    background: 'var(--surface-subtle)',
-                    borderRadius: 'var(--radius-sm)',
-                  }}
+                  className="wheel-segment-row"
                 >
                   <div
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: '50%',
-                      background: segment.color,
-                      border: '2px solid var(--border-muted)',
-                    }}
+                    className="wheel-segment-color"
+                    style={{ background: segment.color }}
                   />
                   <input
                     type="text"
                     value={segment.label}
                     onChange={(e) => updateSegmentLabel(segment.id, e.target.value)}
-                    style={{
-                      padding: '8px 12px',
-                      border: '1px solid var(--border-muted)',
-                      borderRadius: 'var(--radius-sm)',
-                      fontFamily: 'inherit',
-                      fontSize: '1rem',
-                      background: 'var(--surface-base)',
-                    }}
+                    className="wheel-segment-input"
                   />
                   <input
                     type="color"
                     value={segment.color}
                     onChange={(e) => updateSegmentColor(segment.id, e.target.value)}
-                    style={{
-                      width: '100%',
-                      height: 36,
-                      border: '1px solid var(--border-muted)',
-                      borderRadius: 'var(--radius-sm)',
-                      cursor: 'pointer',
-                    }}
+                    className="wheel-segment-color-picker"
                   />
                   <button
                     onClick={() => removeSegment(segment.id)}
                     disabled={segments.length <= 2}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: segments.length <= 2 ? 'var(--surface-subtle)' : 'var(--text-muted)',
-                      cursor: segments.length <= 2 ? 'not-allowed' : 'pointer',
-                      fontSize: '1.5rem',
-                      padding: 0,
-                    }}
-                    onMouseEnter={(e) => {
-                      if (segments.length > 2) e.currentTarget.style.color = '#ef4444';
-                    }}
-                    onMouseLeave={(e) => {
-                      if (segments.length > 2) e.currentTarget.style.color = 'var(--text-muted)';
-                    }}
+                    className="wheel-segment-delete"
+                    aria-label="Remove segment"
                   >
                     ×
                   </button>
@@ -399,9 +407,9 @@ export default function WheelSpinnerPage() {
           </h4>
           <ul style={{ margin: 0, paddingLeft: 20, color: 'var(--text-muted)', fontSize: '0.9375rem' }}>
             <li>Add segments with custom labels (student names, activities, choices, etc.)</li>
-            <li>Click on a segment's color circle to change its color</li>
+            <li>Tap the color picker to change segment colors</li>
             <li>Edit segment labels directly in the list</li>
-            <li>Click "Spin the Wheel!" to make a random selection</li>
+            <li>Tap "Spin the Wheel!" to make a random selection</li>
             <li>The pointer at the top shows the winning segment</li>
             <li>You must have at least 2 segments to spin</li>
           </ul>

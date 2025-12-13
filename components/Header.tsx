@@ -38,7 +38,7 @@ export default function Header() {
 
   return (
     <header className="glass-panel">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
+      <div className="header-inner">
         <a
           href="/"
           className="brand-text"
